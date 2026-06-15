@@ -1,0 +1,19 @@
+{
+  "name": "مساعدي المحاسبي",
+  "short_name": "مساعد محاسبي",
+  "description": "مساعد محاسبي ذكي - حلل الجمل وأضفها لكشف حساب Excel",
+  "start_url": "index.html?v=3.2",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f7fa",
+  "theme_color": "#0d6efd",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
