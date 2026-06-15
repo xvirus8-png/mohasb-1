@@ -129,3 +129,8 @@
   - **SW Cache**: اسم `muhasibi-v3-2` ويمسح الإصدارات القديمة
   - **SW Registration**: مع `sw.js?v=طابع_زمني` لمنع تخبئة الـ SW نفسه
   - **Manifest**: `start_url` مع إصدار `index.html?v=3.2`
+- 15 يونيو 2026 (الجلسة 7): نشر على GitHub Pages
+  - رفعنا آخر نسخة v3.2 إلى `https://github.com/xvirus8-png/MAHMOOD`
+  - التطبيق منشور على: `https://xvirus8-png.github.io/MAHMOOD/`
+  - شغال على أي جهاز (تلفون/كمبيوتر) بدون جدار نار ولا سيرفر محلي
+  - `start.bat` للمستخدمين اللي يبون سيرفر محلي (يقدرون يحذفونه)
