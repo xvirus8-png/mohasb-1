@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -15,123 +15,253 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-user-select:none;user-select:none}
+*{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#f5f7fa;--card:#fff;--shadow:0 8px 25px rgba(0,0,0,.06);--text:#1f2a44;--sub:#6e7b96;--border:#edf2ff;--primary:#0d6efd;--pl:#eef4ff;--pb:#dbe4ff;--bottom:rgba(255,255,255,.88);--success:#16a34a;--danger:#dc2626}
 body.dark{--bg:#0f1117;--card:#1a1d27;--shadow:0 8px 25px rgba(0,0,0,.3);--text:#e2e8f0;--sub:#8896b0;--border:#2a3456;--pl:#161926;--pb:#2a3456;--bottom:rgba(15,17,23,.94)}
-html{min-height:100dvh;background:var(--bg)!important}body{min-height:100dvh;background:var(--bg)!important;color:var(--text);font-family:system-ui;overflow:hidden}
-.page{display:none;height:100vh;overflow-y:auto;padding-bottom:70px}
+html{min-height:100dvh;background:var(--bg)!important}
+body{min-height:100dvh;background:var(--bg)!important;color:var(--text);font-family:system-ui;overflow:hidden;font-size:16px}
+.page{display:none;height:100vh;overflow-y:auto;padding-bottom:80px}
 .page.active{display:block}
 .container{max-width:600px;margin:auto;padding:15px}
 .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;padding-top:5px}
-.top-bar h1{font-size:20px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:6px}
-.top-bar-left{display:flex;align-items:center;gap:8px}
-.icon-btn{width:42px;height:42px;border:none;border-radius:12px;background:var(--card);box-shadow:var(--shadow);font-size:18px;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center}
-.icon-btn-sm{width:32px;height:32px;border:none;border-radius:8px;background:var(--card);font-size:14px;cursor:pointer;color:var(--sub);display:flex;align-items:center;justify-content:center;flex:0 0 32px;border:1px solid var(--pb)}
-.icon-btn-sm:hover{background:var(--pb);color:var(--primary)}
-.file-item{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text);border-bottom:1px solid var(--border)}
+.top-bar h1{font-size:22px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:6px}
+.icon-btn{width:44px;height:44px;border:none;border-radius:12px;background:var(--card);box-shadow:var(--shadow);font-size:19px;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;-webkit-user-select:none;user-select:none}
+.icon-btn-sm{width:34px;height:34px;border:none;border-radius:8px;background:var(--card);font-size:15px;cursor:pointer;color:var(--sub);display:flex;align-items:center;justify-content:center;flex:0 0 34px;border:1px solid var(--pb);-webkit-user-select:none;user-select:none}
+.file-item{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;font-size:15px;font-weight:600;color:var(--text);border-bottom:1px solid var(--border)}
 .file-item:hover{background:var(--pl)}
 .file-item.active{background:var(--pl);color:var(--primary);font-weight:800}
-.file-item .check{color:var(--primary);font-size:12px;margin-right:auto;visibility:hidden}
+.file-item .check{color:var(--primary);font-size:13px;margin-right:auto;visibility:hidden}
 .file-item.active .check{visibility:visible}
 .version{font-size:10px;font-weight:700;color:var(--sub);text-align:center;margin-top:2px}
 
 /* Input Card */
-.input-card{background:var(--card);border-radius:16px;padding:16px;box-shadow:var(--shadow);margin-bottom:15px}
-textarea{width:100%;min-height:80px;padding:12px;border-radius:12px;border:1.5px solid var(--pb);font-size:16px;background:var(--pl);color:var(--text);outline:none;resize:none;font-family:system-ui;transition:background .3s}
-textarea:focus{border-color:var(--primary)}
-.btn{width:100%;padding:14px;border:none;border-radius:14px;font-weight:800;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.input-card{background:var(--card);border-radius:18px;padding:18px;box-shadow:var(--shadow);margin-bottom:15px}
+.btn{width:100%;padding:16px;border:none;border-radius:14px;font-weight:800;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-user-select:none;user-select:none}
 .btn-primary{background:var(--primary);color:#fff;box-shadow:0 8px 20px rgba(13,110,253,.25)}
 .btn-primary:disabled{opacity:.5;cursor:not-allowed}
 .btn-secondary{background:var(--pl);color:var(--primary);border:1.5px solid var(--pb)}
 .btn-success{background:var(--success);color:#fff;box-shadow:0 8px 20px rgba(22,163,74,.25)}
+.btn-danger{background:var(--danger);color:#fff}
 
 /* Recent */
-.section-title{font-size:14px;font-weight:800;color:var(--sub);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.recent-item{background:var(--card);border-radius:12px;padding:10px 14px;margin-bottom:8px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;border:1px solid var(--border)}
-.recent-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 36px}
+.section-title{font-size:15px;font-weight:800;color:var(--sub);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.recent-item{background:var(--card);border-radius:14px;padding:13px 16px;margin-bottom:9px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;border:1px solid var(--border)}
+.recent-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex:0 0 40px}
 .recent-icon.in{background:#ecfdf3;color:var(--success)}
 .recent-icon.out{background:#fef2f2;color:var(--danger)}
 .recent-info{flex:1;min-width:0}
-.recent-title{font-size:13px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.recent-meta{font-size:11px;color:var(--sub);margin-top:2px}
-.recent-amount{font-size:15px;font-weight:900;white-space:nowrap}
+.recent-title{font-size:15px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recent-meta{font-size:12px;color:var(--sub);margin-top:3px}
+.recent-amount{font-size:17px;font-weight:900;white-space:nowrap}
 .recent-amount.in{color:var(--success)}
 .recent-amount.out{color:var(--danger)}
-.empty-state{text-align:center;padding:30px;color:var(--sub);font-weight:700}
+.empty-state{text-align:center;padding:30px;color:var(--sub);font-weight:700;font-size:16px}
 
-/* Table Screen */
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{background:var(--pl);color:var(--primary);padding:10px 8px;font-weight:800;text-align:right;border-bottom:2px solid var(--pb);position:sticky;top:0;z-index:1}
-td{padding:8px;border-bottom:1px solid var(--border);color:var(--text)}
-tr:hover td{background:var(--pl)}
-.summary-row{background:var(--card);border-radius:12px;padding:12px;margin-top:10px;display:flex;justify-content:space-between;font-weight:800;font-size:16px;border:1px solid var(--pb)}
-.total-income{color:var(--success)}.total-outcome{color:var(--danger)}
+/* Statement Table */
+.stmt-wrap{overflow-x:auto;margin-top:6px}
+.stmt-table{width:100%;border-collapse:collapse;font-size:15px}
+.stmt-table th{background:var(--pl);color:var(--primary);padding:11px 10px;font-weight:800;text-align:right;border-bottom:2px solid var(--pb);position:sticky;top:0;z-index:2}
+.stmt-table th.sel-col{width:36px;text-align:center}
+.stmt-table td{padding:11px 10px;border-bottom:1px solid var(--border);color:var(--text);font-size:15px}
+.stmt-table tr:last-child td{border-bottom:none}
+.stmt-table tbody tr{cursor:pointer;transition:background .12s}
+.stmt-table tbody tr:hover td{background:var(--pl)}
+.stmt-table tbody tr.selected td{background:#fef2f2}
+body.dark .stmt-table tbody tr.selected td{background:#2a1515}
+.td-name{font-weight:700;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-amt{font-weight:900;white-space:nowrap;text-align:left;direction:ltr}
+.td-amt.pos{color:var(--success)}
+.td-amt.neg{color:var(--danger)}
+.td-bal{font-weight:900;white-space:nowrap;text-align:left;direction:ltr}
+.td-bal.pos{color:var(--success)}
+.td-bal.neg{color:var(--danger)}
+.td-sel{text-align:center;width:36px}
+.row-cb{width:18px;height:18px;accent-color:var(--danger);cursor:pointer}
+
+/* Net bar */
+.net-bar{position:fixed;left:0;right:0;max-width:600px;margin:auto;background:var(--card);border-top:2px solid var(--pb);border-bottom:1px solid var(--border);padding:10px 18px;display:flex;justify-content:space-between;align-items:center;z-index:50;box-shadow:0 -4px 20px rgba(0,0,0,.08)}
+.net-label{font-size:15px;font-weight:700;color:var(--sub)}
+.net-value{font-size:22px;font-weight:900}
+
+/* Delete bar */
+#delBar{position:fixed;left:0;right:0;max-width:600px;margin:auto;background:var(--danger);padding:12px 18px;display:none;align-items:center;justify-content:space-between;z-index:51}
+#delBar.show{display:flex}
+#delBar span{color:#fff;font-weight:800;font-size:15px}
+#delBar button{background:rgba(255,255,255,.2);border:none;color:#fff;font-weight:800;font-size:14px;padding:8px 16px;border-radius:10px;cursor:pointer;-webkit-user-select:none;user-select:none}
 
 /* Toolbar */
-.toolbar{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap}
-.toolbar-btn{border:none;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:800;cursor:pointer;background:var(--pl);color:var(--primary);border:1px solid var(--pb);display:flex;align-items:center;gap:6px}
+.toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.toolbar-btn{border:none;border-radius:10px;padding:9px 16px;font-size:14px;font-weight:800;cursor:pointer;background:var(--pl);color:var(--primary);border:1px solid var(--pb);-webkit-user-select:none;user-select:none}
 .toolbar-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-.toolbar-btn.danger{background:#fef2f2;color:var(--danger);border-color:#fecaca}
 
 /* Login */
 #loginCard{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80dvh;gap:16px;text-align:center;padding:20px}
-.login-icon{width:80px;height:80px;border-radius:24px;background:linear-gradient(135deg,#4285f4,#34a853);display:flex;align-items:center;justify-content:center;font-size:38px;margin-bottom:8px}
-.login-title{font-size:20px;font-weight:800;color:var(--text)}
-.login-sub{font-size:14px;color:var(--sub);max-width:300px;line-height:1.6}
-.google-btn{display:flex;align-items:center;gap:10px;padding:14px 24px;border-radius:16px;border:none;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.12);font-size:16px;font-weight:700;cursor:pointer;color:#1f2a44}
+.login-title{font-size:22px;font-weight:800;color:var(--text)}
+.login-sub{font-size:15px;color:var(--sub);max-width:300px;line-height:1.6}
+.google-btn{display:flex;align-items:center;gap:10px;padding:14px 24px;border-radius:16px;border:none;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.12);font-size:17px;font-weight:700;cursor:pointer;color:#1f2a44;-webkit-user-select:none;user-select:none}
 .google-btn img{width:22px;height:22px}
 
 /* Bottom Tab Bar */
 .bottom-tabs{position:fixed;bottom:0;left:0;right:0;background:var(--bottom);border-top:1px solid var(--border);display:flex;z-index:100;backdrop-filter:blur(12px);padding:6px 12px calc(6px + env(safe-area-inset-bottom));max-width:600px;margin:auto}
-.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px;border:none;background:transparent;color:var(--sub);font-size:11px;font-weight:700;cursor:pointer;border-radius:12px;transition:color .3s}
-.tab i{font-size:20px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px;border:none;background:transparent;color:var(--sub);font-size:12px;font-weight:700;cursor:pointer;border-radius:12px;transition:color .3s;-webkit-user-select:none;user-select:none}
+.tab i{font-size:22px}
 .tab.active{color:var(--primary);background:var(--pl)}
 
-/* API Key Setup */
+/* Setup */
 #setupCard{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:80dvh;gap:16px;text-align:center;padding:20px}
 #setupCard.show{display:flex}
-.setup-input{width:100%;max-width:360px;padding:12px;border-radius:12px;border:1.5px solid var(--pb);font-size:15px;background:var(--pl);color:var(--text);outline:none;text-align:center}
+.setup-input{width:100%;max-width:360px;padding:13px;border-radius:12px;border:1.5px solid var(--pb);font-size:16px;background:var(--pl);color:var(--text);outline:none;text-align:center}
 
 /* Toast */
-#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f2a44;color:#fff;padding:10px 20px;border-radius:12px;font-size:14px;font-weight:700;z-index:9999;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center}
+#toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f2a44;color:#fff;padding:11px 22px;border-radius:12px;font-size:15px;font-weight:700;z-index:9999;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* Skeleton */
-.skeleton{background:var(--card);border-radius:12px;height:52px;margin-bottom:8px;overflow:hidden;position:relative}
-.skeleton::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 25%,rgba(150,150,150,.08) 50%,transparent 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
-/* Progress Overlay */
+/* Progress */
 #progressOverlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);z-index:5000;display:none;align-items:center;justify-content:center}
 #progressOverlay.show{display:flex}
 .progress-card{background:var(--card);border-radius:20px;padding:24px;width:min(90%,380px);box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center}
-.progress-title{font-size:17px;font-weight:800;margin-bottom:16px;color:var(--text)}
-.progress-status{font-size:14px;color:var(--sub);margin-bottom:12px}
+.progress-title{font-size:18px;font-weight:800;margin-bottom:16px;color:var(--text)}
+.progress-status{font-size:15px;color:var(--sub);margin-bottom:12px}
 .progress-spinner{width:40px;height:40px;border:4px solid var(--pb);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:auto}
 @keyframes spin{to{transform:rotate(360deg)}}
+
 /* Form fields */
-.fld{width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--pb);font-size:15px;background:var(--pl);color:var(--text);outline:none;font-family:system-ui;transition:border-color .3s}
+.fld{width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--pb);font-size:16px;background:var(--pl);color:var(--text);outline:none;font-family:system-ui;transition:border-color .3s}
 .fld:focus{border-color:var(--primary)}
-.fld-label{font-size:13px;font-weight:700;color:var(--sub);margin-bottom:6px;display:flex;align-items:center;gap:6px}
-.toggle-group{display:flex;gap:6px}
-.toggle-btn{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--pb);font-weight:800;font-size:14px;cursor:pointer;text-align:center;background:var(--pl);color:var(--sub);transition:all .3s}
+.fld-label{font-size:14px;font-weight:700;color:var(--sub);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.toggle-group{display:flex;gap:8px}
+.toggle-btn{flex:1;padding:12px;border-radius:10px;border:1.5px solid var(--pb);font-weight:800;font-size:15px;cursor:pointer;text-align:center;background:var(--pl);color:var(--sub);transition:all .3s;-webkit-user-select:none;user-select:none}
 .toggle-btn.active-in{background:#ecfdf3;color:var(--success);border-color:var(--success)}
 .toggle-btn.active-out{background:#fef2f2;color:var(--danger);border-color:var(--danger)}
 .ai-section{background:var(--card);border-radius:12px;padding:12px;margin-top:10px;border:1px solid var(--border)}
-.ai-section summary{font-size:13px;font-weight:700;color:var(--sub);cursor:pointer;padding:4px 0}
-.ai-section textarea{min-height:60px}
+.ai-section summary{font-size:14px;font-weight:700;color:var(--sub);cursor:pointer;padding:4px 0}
+.ai-section textarea{width:100%;min-height:60px;padding:10px;border-radius:10px;border:1.5px solid var(--pb);font-size:15px;background:var(--pl);color:var(--text);outline:none;resize:none;font-family:system-ui;margin-top:8px}
+
+/* Numpad */
+#numpadOverlay{position:fixed;inset:0;z-index:2000;display:none;flex-direction:column;justify-content:flex-end}
+#numpadOverlay.show{display:flex}
+#numpadBd{position:absolute;inset:0;background:rgba(0,0,0,.3)}
+#numpadSheet{position:relative;background:var(--card);border-radius:24px 24px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom));max-width:600px;width:100%;margin:auto;box-shadow:0 -8px 40px rgba(0,0,0,.2)}
+#numpadDisplay{font-size:40px;font-weight:900;color:var(--text);text-align:left;direction:ltr;padding:8px 12px 12px;min-height:58px;letter-spacing:1px;word-break:break-all}
+#numpadDisplay .ph{font-size:20px;font-weight:700;color:var(--sub)}
+.np-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.nk{height:64px;border:none;border-radius:14px;font-size:24px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:opacity .1s;-webkit-user-select:none;user-select:none}
+.nk:active{opacity:.6}
+.nk-num{background:var(--pl);color:var(--text)}
+.nk-del{background:#fef2f2;color:var(--danger)}
+.nk-ok{background:var(--success);color:#fff}
+
+/* Long Press Modal */
+#txnModal{position:fixed;inset:0;z-index:3000;display:none;align-items:flex-end;justify-content:center}
+#txnModal.show{display:flex}
+#txnModalBg{position:absolute;inset:0;background:rgba(0,0,0,.4)}
+#txnModalSheet{position:relative;background:var(--card);border-radius:24px 24px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom));max-width:600px;width:100%;box-shadow:0 -8px 40px rgba(0,0,0,.2)}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 16px}
+.modal-title{font-size:20px;font-weight:900;color:var(--text);margin-bottom:4px}
+.modal-meta{font-size:13px;color:var(--sub);margin-bottom:12px}
+.modal-amount{font-size:32px;font-weight:900;margin-bottom:18px}
+.modal-row{display:flex;gap:10px}
+.modal-btn{flex:1;padding:14px;border:none;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;-webkit-user-select:none;user-select:none}
+.modal-edit{background:var(--pl);color:var(--primary);border:1.5px solid var(--pb)}
+.modal-del{background:#fef2f2;color:var(--danger)}
+#editForm{display:none;margin-top:14px;border-top:1px solid var(--border);padding-top:14px;gap:10px;flex-direction:column}
+#editForm.show{display:flex}
+
+/* Create File Modal */
+#createModal{position:fixed;inset:0;z-index:4000;display:none;align-items:center;justify-content:center}
+#createModal.show{display:flex}
+#createModalBg{position:absolute;inset:0;background:rgba(0,0,0,.4)}
+#createModalSheet{position:relative;background:var(--card);border-radius:24px;padding:24px;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.cm-title{font-size:20px;font-weight:900;color:var(--text);margin-bottom:14px;text-align:center}
+.cm-input{width:100%;padding:14px;border-radius:12px;border:1.5px solid var(--pb);font-size:16px;background:var(--pl);color:var(--text);outline:none;margin-bottom:14px}
+.cm-input:focus{border-color:var(--primary)}
+.cm-actions{display:flex;gap:10px}
+.cm-actions button{flex:1;padding:13px;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;-webkit-user-select:none;user-select:none}
+.cm-cancel{background:var(--pl);color:var(--sub)}
+.cm-confirm{background:var(--primary);color:#fff}
 </style>
 </head>
 <body>
 
 <div id="toast"></div>
-
 <div id="progressOverlay">
   <div class="progress-card">
     <div class="progress-title" id="progressTitle">🔄 جاري المعالجة...</div>
     <div class="progress-status" id="progressStatus">الرجاء الانتظار</div>
     <div class="progress-spinner"></div>
+  </div>
+</div>
+
+<!-- ===== CREATE FILE MODAL ===== -->
+<div id="createModal">
+  <div id="createModalBg" onclick="closeCreateModal()"></div>
+  <div id="createModalSheet">
+    <div class="cm-title">📁 إنشاء ملف جديد</div>
+    <input id="createFileInput" class="cm-input" placeholder="مثال: مصاريف البيت" maxlength="60">
+    <div class="cm-actions">
+      <button class="cm-cancel" onclick="closeCreateModal()">إلغاء</button>
+      <button class="cm-confirm" onclick="confirmCreateFile()">✅ إنشاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== NUMPAD ===== -->
+<div id="numpadOverlay">
+  <div id="numpadBd" onclick="closeNumpad()"></div>
+  <div id="numpadSheet">
+    <div id="numpadDisplay"><span class="ph">المبلغ</span></div>
+    <div class="np-grid">
+      <button class="nk nk-num" onclick="npKey('1')">1</button>
+      <button class="nk nk-num" onclick="npKey('2')">2</button>
+      <button class="nk nk-num" onclick="npKey('3')">3</button>
+      <button class="nk nk-num" onclick="npKey('4')">4</button>
+      <button class="nk nk-num" onclick="npKey('5')">5</button>
+      <button class="nk nk-num" onclick="npKey('6')">6</button>
+      <button class="nk nk-num" onclick="npKey('7')">7</button>
+      <button class="nk nk-num" onclick="npKey('8')">8</button>
+      <button class="nk nk-num" onclick="npKey('9')">9</button>
+      <button class="nk nk-num" onclick="npKey('000')" style="font-size:18px">000</button>
+      <button class="nk nk-num" onclick="npKey('0')">0</button>
+      <button class="nk nk-del" onclick="npDel()">⌫</button>
+    </div>
+    <div style="margin-top:10px">
+      <button class="nk nk-ok" style="width:100%;height:56px;border-radius:14px;font-size:19px" onclick="npConfirm()">✓ تأكيد</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LONG PRESS MODAL ===== -->
+<div id="txnModal">
+  <div id="txnModalBg" onclick="closeTxnModal()"></div>
+  <div id="txnModalSheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modalName">—</div>
+    <div class="modal-meta" id="modalMeta">—</div>
+    <div class="modal-amount" id="modalAmount">—</div>
+    <div class="modal-row">
+      <button class="modal-btn modal-edit" onclick="startEdit()">✏️ تعديل</button>
+      <button class="modal-btn modal-del" onclick="deleteSingleTxn()">🗑 حذف</button>
+    </div>
+    <div id="editForm">
+      <input type="text" id="editShop" class="fld" placeholder="الاسم...">
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="text" id="editAmount" class="fld" placeholder="المبلغ..." style="flex:1;direction:ltr;cursor:pointer" readonly onclick="openNumpadEdit()">
+        <div class="toggle-group" style="flex:0 0 auto">
+          <div id="editToggleIn" class="toggle-btn" onclick="setEditType('in')">استلام</div>
+          <div id="editToggleOut" class="toggle-btn active-out" onclick="setEditType('out')">صرف</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="saveEdit()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DELETE BAR ===== -->
+<div id="delBar">
+  <span id="delBarCount">0 محدد</span>
+  <div style="display:flex;gap:8px">
+    <button onclick="cancelSelection()">إلغاء</button>
+    <button onclick="deleteSelected()" style="background:rgba(255,255,255,.35)">🗑 حذف</button>
   </div>
 </div>
 
@@ -141,7 +271,7 @@ tr:hover td{background:var(--pl)}
 
     <!-- Login Card -->
     <div id="loginCard">
-      <div class="login-icon">📊</div>
+      <div style="font-size:60px;margin-bottom:8px">📊</div>
       <div class="login-title">مساعدي المحاسبي</div>
       <div class="login-sub">سجل دخول بحساب Google للوصول لملفات Excel على Drive</div>
       <button class="google-btn" onclick="signIn()">
@@ -150,29 +280,30 @@ tr:hover td{background:var(--pl)}
       </button>
     </div>
 
-    <!-- Setup Card (API Key) -->
+    <!-- Setup Card -->
     <div id="setupCard">
       <div style="font-size:40px;margin-bottom:8px">🔑</div>
-      <div class="login-title">مفتاح API</div>
-      <div class="login-sub">مفتاح Gemini مضبوط مسبقاً ✅<br>التطبيق جاهز للاستخدام</div>
-      <button class="btn btn-primary" onclick="startApp()" style="max-width:200px">ابدأ</button>
+      <div class="login-title">مفتاح Gemini API</div>
+      <div class="login-sub">أدخل مفتاح Gemini لتفعيل التحليل بالذكاء الاصطناعي<br>
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--primary);font-size:13px">احصل على مفتاح مجاني</a>
+      </div>
+      <input id="apiKeyInput" class="setup-input" type="password" placeholder="AIza..." style="margin-top:8px">
+      <button class="btn btn-primary" onclick="saveApiKey()" style="max-width:240px">✅ حفظ وابدأ</button>
+      <button class="btn btn-secondary" onclick="skipApiKey()" style="max-width:240px;margin-top:4px;font-size:14px">تخطي (بدون AI)</button>
     </div>
 
     <!-- Main App -->
     <div id="mainApp" style="display:none">
-      <!-- Top Bar -->
       <div class="top-bar">
-        <div class="top-bar-left">
-          <h1>📊 مساعدي المحاسبي</h1>
-        </div>
+        <h1>📊 مساعدي المحاسبي</h1>
         <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
           <button class="icon-btn" id="darkBtn" onclick="toggleDark()">🌙</button>
-          <span class="version">v3.2</span>
+          <span class="version">v3.4</span>
         </div>
       </div>
 
       <!-- File Manager -->
-      <div id="fileInfoBar" style="display:flex;align-items:center;gap:6px;background:var(--pl);border-radius:12px;padding:8px 12px;margin-bottom:15px;border:1px solid var(--pb);font-size:12px;font-weight:700;color:var(--sub)">
+      <div id="fileInfoBar" style="display:flex;align-items:center;gap:6px;background:var(--pl);border-radius:12px;padding:9px 13px;margin-bottom:15px;border:1px solid var(--pb);font-size:13px;font-weight:700;color:var(--sub)">
         <span>📁</span>
         <div id="fileSelector" style="flex:1;position:relative">
           <div id="fileSelectorToggle" onclick="toggleFileDropdown()" style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:2px 0">
@@ -181,23 +312,25 @@ tr:hover td{background:var(--pl)}
           </div>
           <div id="fileDropdown" style="display:none;position:absolute;top:100%;right:0;left:0;background:var(--card);border:1px solid var(--pb);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:200;margin-top:4px;overflow:hidden;max-height:260px;overflow-y:auto">
             <div id="fileListItems"></div>
-            <div id="createNewFileBtn" style="border-top:1px solid var(--border);padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700;color:var(--primary)" onclick="createNewFile()">
+            <div style="border-top:1px solid var(--border);padding:11px 13px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700;color:var(--primary)" onclick="showCreateModal()">
               <span>➕</span> إنشاء ملف جديد
             </div>
           </div>
         </div>
-        <span id="folderIndicator" style="font-size:11px;cursor:pointer;color:var(--sub);display:flex;align-items:center;gap:3px" onclick="openAppFolder()" title="فتح مجلد التطبيق">📁</span>
-        <button class="icon-btn-sm" onclick="refreshFileList()" title="تحديث القائمة">🔄</button>
-        <button class="icon-btn-sm" onclick="openInDrive()" title="فتح في Drive">📂</button>
-        <span id="syncStatus" style="font-size:11px">✅</span>
+        <span id="folderIndicator" style="font-size:11px;cursor:pointer;color:var(--sub)" onclick="openAppFolder()">📁</span>
+        <button class="icon-btn-sm" onclick="refreshFileList()" title="تحديث">🔄</button>
+        <button class="icon-btn-sm" onclick="openInDrive()" title="Drive">📂</button>
+        <span id="syncStatus" style="font-size:12px">✅</span>
       </div>
 
       <!-- Input Form -->
       <div class="input-card">
-        <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
+        <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:14px">
           <div style="flex:1">
-            <div class="fld-label">المبلغ</div>
-            <input type="number" id="amountInput" class="fld" placeholder="0" style="text-align:center;font-size:20px;font-weight:800;direction:ltr">
+            <div class="fld-label">💰 المبلغ</div>
+            <input type="text" id="amountInput" class="fld" placeholder="0" readonly
+              style="text-align:center;font-size:28px;font-weight:900;direction:ltr;cursor:pointer;letter-spacing:1px"
+              onclick="openNumpad()">
           </div>
           <div style="flex:0 0 auto">
             <div class="fld-label">النوع</div>
@@ -208,42 +341,20 @@ tr:hover td{background:var(--pl)}
           </div>
         </div>
 
-        <div class="fld-label">اسم المحل / الشخص</div>
-        <input type="text" id="shopInput" class="fld" placeholder="مثال: محمود، مكتبة النور، كهرباء..." style="margin-bottom:8px">
+        <div class="fld-label">👤 الاسم</div>
+        <input type="text" id="shopInput" class="fld" placeholder="محمود، مكتبة النور..." style="margin-bottom:14px">
 
-        <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--sub);cursor:pointer">
-            <input type="checkbox" id="brandCheck" onchange="toggleBrand()"> مع براند
-          </label>
-          <input type="text" id="brandInput" class="fld" placeholder="البراند..." style="display:none;flex:1">
-        </div>
-
-        <div class="fld-label">المصاريف</div>
-        <input type="text" id="expenseInput" class="fld" placeholder="مثال: قرطاسية، كهرباء، إيجار..." style="margin-bottom:8px">
-
-        <div id="reasonRow" style="display:block">
-          <div class="fld-label">السبب</div>
-          <input type="text" id="reasonInput" class="fld" placeholder="سبب المصروف..." style="margin-bottom:10px">
-        </div>
-
-        <!-- AI Fallback -->
         <details class="ai-section">
           <summary>🤖 تحليل بالذكاء الاصطناعي (احتياطي)</summary>
-          <textarea id="sentenceInput" placeholder="اكتب جملة والمطلوب يطلع التحليل...
-مثال: استلمت 50 دينار من محمود" rows="2"></textarea>
-          <div style="margin-top:8px;display:flex;gap:8px">
-            <button class="btn btn-secondary" id="analyzeBtn" onclick="analyzeSentence()" style="flex:1;padding:10px;font-size:13px" disabled>
-              🔍 تحليل
-            </button>
+          <textarea id="sentenceInput" placeholder="مثال: استلمت 50 دينار من محمود" rows="2"></textarea>
+          <div style="margin-top:8px">
+            <button class="btn btn-secondary" id="analyzeBtn" onclick="analyzeSentence()" style="padding:11px;font-size:14px" disabled>🔍 تحليل</button>
           </div>
         </details>
 
-        <button class="btn btn-success" id="addBtn" onclick="addTransaction()" style="margin-top:10px">
-          ➕ إضافة إلى الكشف
-        </button>
+        <button class="btn btn-success" onclick="addTransaction()" style="margin-top:12px">➕ إضافة إلى الكشف</button>
       </div>
 
-      <!-- Recent Transactions -->
       <div class="section-title"><i class="bi bi-clock-history"></i> آخر المعاملات</div>
       <div id="recentList"><div class="empty-state">ماكو معاملات بعد</div></div>
     </div>
@@ -252,14 +363,10 @@ tr:hover td{background:var(--pl)}
 
 <!-- ==================== PAGE: STATEMENT ==================== -->
 <div id="pageStatement" class="page">
-  <div class="container">
+  <div class="container" id="stmtContainer" style="padding-bottom:130px">
     <div class="top-bar">
-      <div class="top-bar-left">
-        <h1>📋 كشف الحساب</h1>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="icon-btn" onclick="loadStatement()" title="تحديث"><i class="bi bi-arrow-clockwise"></i></button>
-      </div>
+      <h1>📋 كشف الحساب</h1>
+      <button class="icon-btn" onclick="loadStatement()" title="تحديث"><i class="bi bi-arrow-clockwise"></i></button>
     </div>
 
     <div class="toolbar">
@@ -268,96 +375,92 @@ tr:hover td{background:var(--pl)}
       <button class="toolbar-btn" id="filterOut" onclick="setFilter('out')">صرف</button>
     </div>
 
-    <div id="dateFilter" style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap">
-      <span style="font-size:12px;font-weight:700;color:var(--sub)">من:</span>
-      <input type="date" id="dateFrom" style="flex:1;min-width:0;padding:8px;border-radius:10px;border:1.5px solid var(--pb);background:var(--card);color:var(--text);font-size:13px;outline:none">
-      <span style="font-size:12px;font-weight:700;color:var(--sub)">إلى:</span>
-      <input type="date" id="dateTo" style="flex:1;min-width:0;padding:8px;border-radius:10px;border:1.5px solid var(--pb);background:var(--card);color:var(--text);font-size:13px;outline:none">
-      <button class="toolbar-btn" onclick="applyDateFilter()" style="flex:0 0 auto">تصفية</button>
-      <button class="toolbar-btn" onclick="clearDateFilter()" style="flex:0 0 auto">مسح</button>
+    <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap">
+      <span style="font-size:13px;font-weight:700;color:var(--sub)">من:</span>
+      <input type="date" id="dateFrom" style="flex:1;min-width:0;padding:9px;border-radius:10px;border:1.5px solid var(--pb);background:var(--card);color:var(--text);font-size:14px;outline:none">
+      <span style="font-size:13px;font-weight:700;color:var(--sub)">إلى:</span>
+      <input type="date" id="dateTo" style="flex:1;min-width:0;padding:9px;border-radius:10px;border:1.5px solid var(--pb);background:var(--card);color:var(--text);font-size:14px;outline:none">
+      <button class="toolbar-btn" onclick="applyDateFilter()">تصفية</button>
+      <button class="toolbar-btn" onclick="clearDateFilter()">مسح</button>
     </div>
 
-    <div class="table-wrap">
-      <table id="statementTable">
+    <div class="stmt-wrap">
+      <table class="stmt-table" id="stmtTable">
         <thead>
           <tr>
+            <th class="sel-col"><input type="checkbox" id="selectAll" class="row-cb" onchange="toggleSelectAll(this)"></th>
             <th>الاسم</th>
-            <th>استلام</th>
-            <th>صرف</th>
-            <th>التاريخ</th>
+            <th>المبلغ</th>
             <th>الرصيد</th>
           </tr>
         </thead>
-        <tbody id="statementBody">
-          <tr><td colspan="5" style="text-align:center;color:var(--sub);padding:30px">حمل من Excel لعرض البيانات</td></tr>
+        <tbody id="stmtBody">
+          <tr><td colspan="4" style="text-align:center;color:var(--sub);padding:30px">حمل من Excel لعرض البيانات</td></tr>
         </tbody>
       </table>
     </div>
+  </div>
 
-    <div class="summary-row" id="summaryRow" style="display:none">
-      <span>الاستلام: <span class="total-income" id="totalIn">0</span> د.ع</span>
-      <span>الصرف: <span class="total-outcome" id="totalOut">0</span> د.ع</span>
-      <span>الصافي: <span id="totalNet">0</span> د.ع</span>
-    </div>
-    <div style="height:20px"></div>
+  <div class="net-bar" id="netBar" style="display:none">
+    <span class="net-label">الصافي</span>
+    <span class="net-value" id="totalNet">0</span>
   </div>
 </div>
 
 <!-- ==================== BOTTOM TABS ==================== -->
 <div class="bottom-tabs">
   <button class="tab active" id="tabInput" onclick="switchTab('input')">
-    <i class="bi bi-pencil-square"></i>
-    <span>إدخال</span>
+    <i class="bi bi-pencil-square"></i><span>إدخال</span>
   </button>
   <button class="tab" id="tabStatement" onclick="switchTab('statement')">
-    <i class="bi bi-table"></i>
-    <span>كشف الحساب</span>
+    <i class="bi bi-table"></i><span>كشف الحساب</span>
   </button>
 </div>
 
-<!-- ==================== SCRIPTS ==================== -->
 <script src="https://apis.google.com/js/api.js"></script>
 <script src="https://accounts.google.com/gsi/client"></script>
 <script>
-// ===== CACHE BUSTER =====
-(function(){var V="v3.2";if(localStorage.getItem("_av")!==V){localStorage.setItem("_av",V);location.search="v="+Date.now()}})();
 // ===== CONFIG =====
-const CLIENT_ID     = "503826285883-45mi9qcd6vldrkbanu6me6fpqg5dghqs.apps.googleusercontent.com";
-const API_KEY       = "AIzaSyDwMM73FaT5snh18bs1WEE1A5pnXlGaD1M";
-const SCOPES        = "https://www.googleapis.com/auth/drive.file";
-const TOKEN_KEY     = "acc_token";
-const APP_VERSION   = "v3.2";
-const GEMINI_API    = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-const EMBEDDED_KEY  = "AQ.Ab8RN6JVBL8ccbUjK-V2nKfbqEvFk8GdtCT2cMrc8cGgNmF3oA";
+const CLIENT_ID  = "503826285883-45mi9qcd6vldrkbanu6me6fpqg5dghqs.apps.googleusercontent.com";
+const API_KEY    = "AIzaSyDwMM73FaT5snh18bs1WEE1A5pnXlGaD1M";
+const SCOPES     = "https://www.googleapis.com/auth/drive.file";
+const TOKEN_KEY  = "acc_token";
+const GEMINI_API = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+const APP_FOLDER_NAME = "مساعدي المحاسبي";
+const GEMINI_TIMEOUT = 15000;
 
 // ===== STATE =====
 let tokenClient, accessToken=null;
 let currentFileId=null, currentFileName="", appFolderId=null;
 let myFiles=[], transactions=[], currentFilter="all", currentType="out";
-const APP_FOLDER_NAME = "مساعدي المحاسبي";
+let npRaw="", npTarget="main";
+let activeId=null, editType="out";
+let selectedIds=new Set();
+let syncLock=false;
+let syncTimer=null;
 
 // ===== DARK MODE =====
-function initDark(){
-  const s=localStorage.getItem("dm")==="1";
-  if(s){ document.body.classList.add("dark"); document.getElementById("darkBtn").textContent="☀️"; }
-}
+(function initDark(){
+  if(localStorage.getItem("dm")==="1"){ document.body.classList.add("dark"); }
+})();
 function toggleDark(){
   const d=document.body.classList.toggle("dark");
   localStorage.setItem("dm",d?"1":"0");
   document.getElementById("darkBtn").textContent=d?"☀️":"🌙";
 }
 window.toggleDark=toggleDark;
-initDark();
+document.addEventListener("DOMContentLoaded",()=>{
+  if(document.body.classList.contains("dark")) document.getElementById("darkBtn").textContent="☀️";
+});
 
 // ===== TOAST =====
 let toastTimer;
-function showToast(msg){
+function showToast(msg,dur=3500){
   const t=document.getElementById("toast");
   t.textContent=msg; t.classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>t.classList.remove("show"),2800);
+  toastTimer=setTimeout(()=>t.classList.remove("show"),dur);
 }
-window.showToast=showToast;
 
 // ===== PROGRESS =====
 function showProgress(title,status){
@@ -368,10 +471,6 @@ function showProgress(title,status){
 function hideProgress(){ document.getElementById("progressOverlay").classList.remove("show"); }
 
 // ===== AUTH =====
-function saveToken(t){ localStorage.setItem(TOKEN_KEY,t); }
-function loadToken(){ return localStorage.getItem(TOKEN_KEY)||null; }
-function clearToken(){ localStorage.removeItem(TOKEN_KEY); }
-
 function initGapi(){
   gapi.load("client",async()=>{
     await gapi.client.init({apiKey:API_KEY,discoveryDocs:["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"]});
@@ -379,12 +478,13 @@ function initGapi(){
       client_id:CLIENT_ID, scope:SCOPES, prompt:"",
       callback:async(resp)=>{
         if(resp.error){ showToast("فشل تسجيل الدخول"); return; }
-        accessToken=resp.access_token; saveToken(accessToken);
+        accessToken=resp.access_token;
+        localStorage.setItem(TOKEN_KEY,accessToken);
         gapi.client.setToken({access_token:accessToken});
         onAuthReady();
       }
     });
-    const saved=loadToken();
+    const saved=localStorage.getItem(TOKEN_KEY);
     if(saved){
       accessToken=saved; gapi.client.setToken({access_token:saved});
       try{ await gapi.client.drive.about.get({fields:"user"}); onAuthReady(); }
@@ -395,25 +495,24 @@ function initGapi(){
 
 function onAuthReady(){
   document.getElementById("loginCard").style.display="none";
-  let apiKey=localStorage.getItem("gemini_api_key");
-  if(!apiKey||apiKey==="skip"){
-    localStorage.setItem("gemini_api_key",EMBEDDED_KEY);
-    apiKey=EMBEDDED_KEY;
+  const apiKey=localStorage.getItem("gemini_api_key");
+  if(!apiKey||apiKey===""){
+    document.getElementById("setupCard").classList.add("show");
+    document.getElementById("mainApp").style.display="none";
+    return;
   }
   document.getElementById("setupCard").classList.remove("show");
   document.getElementById("mainApp").style.display="block";
   ensureAppFolder().then(()=>{ loadFileList(); loadRecentTransactions(); if(currentFileId) syncFromDrive(); });
 }
-
 function showLogin(){
   document.getElementById("loginCard").style.display="flex";
   document.getElementById("mainApp").style.display="none";
   document.getElementById("setupCard").classList.remove("show");
 }
-
 function signIn(){
   if(!tokenClient){ showToast("جاري التهيئة..."); setTimeout(signIn,1000); return; }
-  clearToken(); tokenClient.prompt="consent"; tokenClient.requestAccessToken();
+  localStorage.removeItem(TOKEN_KEY); tokenClient.prompt="consent"; tokenClient.requestAccessToken();
 }
 window.signIn=signIn;
 
@@ -428,15 +527,6 @@ function saveApiKey(){
 }
 window.saveApiKey=saveApiKey;
 
-function startApp(){
-  localStorage.setItem("gemini_api_key",EMBEDDED_KEY);
-  document.getElementById("setupCard").classList.remove("show");
-  document.getElementById("mainApp").style.display="block";
-  loadRecentTransactions();
-  ensureAppFolder().then(()=>{ loadFileList(); syncFromDrive(); });
-}
-window.startApp=startApp;
-
 function skipApiKey(){
   localStorage.setItem("gemini_api_key","skip");
   document.getElementById("setupCard").classList.remove("show");
@@ -447,423 +537,354 @@ function skipApiKey(){
 }
 window.skipApiKey=skipApiKey;
 
+// ===== CREATE FILE MODAL =====
+function showCreateModal(){
+  closeFileDropdown();
+  document.getElementById("createFileInput").value="";
+  document.getElementById("createModal").classList.add("show");
+  setTimeout(()=>document.getElementById("createFileInput").focus(),200);
+}
+function closeCreateModal(){ document.getElementById("createModal").classList.remove("show"); }
+window.closeCreateModal=closeCreateModal;
+
+function confirmCreateFile(){
+  const name=document.getElementById("createFileInput").value.trim();
+  if(!name){ showToast("أدخل اسم الملف"); return; }
+  closeCreateModal();
+  createNewFile(name);
+}
+window.confirmCreateFile=confirmCreateFile;
+
+document.getElementById("createFileInput").addEventListener("keydown",function(e){
+  if(e.key==="Enter"){ e.preventDefault(); confirmCreateFile(); }
+});
+
+async function createNewFile(fileName){
+  const fn=fileName.endsWith(".xlsx")?fileName:fileName+".xlsx";
+  showProgress("📁 إنشاء ملف جديد",`جاري إنشاء ${fn}...`);
+  try{
+    const wb=XLSX.utils.book_new();
+    const ws=XLSX.utils.aoa_to_sheet([["التاريخ","الوقت","اسم المحل","المبلغ","_id"]]);
+    ws['!cols']=[{wch:12},{wch:8},{wch:20},{wch:12},{wch:0}];
+    XLSX.utils.book_append_sheet(wb,ws,"كشف حساب");
+    const wbOut=XLSX.write(wb,{type:"array",bookType:"xlsx"});
+    const blob=new Blob([wbOut],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+    const boundary="----"+crypto.randomUUID();
+    const meta={name:fn,mimeType:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",parents:[appFolderId]};
+    const parts=["--"+boundary,"Content-Type: application/json; charset=UTF-8","",JSON.stringify(meta),"--"+boundary,"Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","",blob,"--"+boundary+"--"];
+    const res=await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",{method:"POST",headers:{"Authorization":"Bearer "+accessToken,"Content-Type":"multipart/related; boundary="+boundary},body:parts.join("\r\n")});
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const result=await res.json();
+    if(!result.id) throw new Error("لا يوجد id في الرد");
+    myFiles.unshift({id:result.id,name:fn}); saveFileList(myFiles);
+    switchFile(result.id,fn); hideProgress(); showToast(`✅ تم إنشاء ${fn}`);
+  } catch(e){
+    hideProgress(); showToast("فشل إنشاء الملف");
+    console.error("createNewFile error:",e);
+  }
+}
+window.createNewFile=createNewFile;
+
+// ===== NUMPAD =====
+function openNumpad(){ npTarget="main"; npRaw=document.getElementById("amountInput").value.replace(/,/g,"")||""; document.getElementById("numpadOverlay").classList.add("show"); updateNpDisplay(); }
+function openNumpadEdit(){ npTarget="edit"; npRaw=document.getElementById("editAmount").value.replace(/,/g,"")||""; document.getElementById("numpadOverlay").classList.add("show"); updateNpDisplay(); }
+function closeNumpad(){ document.getElementById("numpadOverlay").classList.remove("show"); }
+window.closeNumpad=closeNumpad;
+
+function npKey(k){
+  const digits=npRaw.replace(/[^0-9]/g,"");
+  if(digits.length>=12) return;
+  if(k==="000"){
+    if(!npRaw) return;
+    const canAdd=12-digits.length;
+    if(canAdd<3) return;
+    npRaw+="000".slice(0,Math.min(3,canAdd));
+  } else {
+    if(npRaw==="0") return;
+    npRaw+=k;
+  }
+  updateNpDisplay();
+}
+function npDel(){ npRaw=npRaw.slice(0,-1); updateNpDisplay(); }
+function updateNpDisplay(){
+  const el=document.getElementById("numpadDisplay");
+  if(!npRaw){ el.innerHTML='<span class="ph">المبلغ</span>'; return; }
+  const parts=npRaw.split(".");
+  parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,",");
+  el.textContent=parts.join(".");
+}
+function npConfirm(){
+  if(!npRaw){ closeNumpad(); return; }
+  const num=parseFloat(npRaw);
+  if(isNaN(num)||num<=0){ showToast("مبلغ غير صحيح"); return; }
+  const fmt=fmtNum(num);
+  if(npTarget==="main") document.getElementById("amountInput").value=fmt;
+  else document.getElementById("editAmount").value=fmt;
+  closeNumpad();
+}
+window.npKey=npKey; window.npDel=npDel; window.npConfirm=npConfirm;
+
 // ===== FILE MANAGER =====
 function getFileList(){ try{ return JSON.parse(localStorage.getItem("myFiles")||"[]"); }catch{ return []; } }
-function saveFileList(files){ localStorage.setItem("myFiles",JSON.stringify(files)); myFiles=files; }
-function folderQuery(){ return appFolderId?`mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' and '${appFolderId}' in parents and trashed=false`:`mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' and trashed=false`; }
+function saveFileList(f){ localStorage.setItem("myFiles",JSON.stringify(f)); myFiles=f; }
+function folderQ(){ return appFolderId?`mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' and '${appFolderId}' in parents and trashed=false`:`mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' and trashed=false`; }
 
 async function ensureAppFolder(){
   const saved=localStorage.getItem("appFolderId");
   if(saved){ appFolderId=saved; updateFolderIndicator(); return; }
   try{
-    const res=await gapi.client.drive.files.list({
-      q:`name='${APP_FOLDER_NAME}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
-      fields:"files(id,name)", pageSize:5
-    });
+    const res=await gapi.client.drive.files.list({q:`name='${APP_FOLDER_NAME}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,fields:"files(id,name)",pageSize:5});
     const folders=res.result.files||[];
-    if(folders.length){
-      appFolderId=folders[0].id; localStorage.setItem("appFolderId",appFolderId);
-    } else {
-      // Create the folder
-      const metaRes=await fetch("https://www.googleapis.com/drive/v3/files",{
-        method:"POST",
-        headers:{"Authorization":"Bearer "+accessToken,"Content-Type":"application/json"},
-        body:JSON.stringify({name:APP_FOLDER_NAME,mimeType:"application/vnd.google-apps.folder"})
-      });
-      const folder=await metaRes.json();
-      appFolderId=folder.id; localStorage.setItem("appFolderId",appFolderId);
+    if(folders.length){ appFolderId=folders[0].id; }
+    else {
+      const mr=await fetch("https://www.googleapis.com/drive/v3/files",{method:"POST",headers:{"Authorization":"Bearer "+accessToken,"Content-Type":"application/json"},body:JSON.stringify({name:APP_FOLDER_NAME,mimeType:"application/vnd.google-apps.folder"})});
+      const folder=await mr.json(); appFolderId=folder.id;
     }
+    localStorage.setItem("appFolderId",appFolderId);
     updateFolderIndicator();
-  } catch(e){ showToast("فشل إعداد مجلد التطبيق"); }
+  } catch(e){ showToast("فشل إعداد مجلد التطبيق"); console.error("ensureAppFolder:",e); }
 }
-
 function updateFolderIndicator(){
   const el=document.getElementById("folderIndicator");
-  if(el) el.innerHTML=appFolderId?`📁 ${APP_FOLDER_NAME}`:"📁";
+  if(el) el.textContent=appFolderId?`📁 ${APP_FOLDER_NAME}`:"📁";
 }
-
-function openAppFolder(){
-  if(appFolderId) window.open(`https://drive.google.com/drive/folders/${appFolderId}`,"_blank");
-  else showToast("مجلد التطبيق غير جاهز");
-}
+function openAppFolder(){ if(appFolderId) window.open(`https://drive.google.com/drive/folders/${appFolderId}`,"_blank"); }
 window.openAppFolder=openAppFolder;
 
 function loadFileList(){
-  const saved=getFileList();
-  const defaultId=localStorage.getItem("defaultFileId");
+  const saved=getFileList(); const defaultId=localStorage.getItem("defaultFileId");
   if(saved.length&&defaultId){
-    const found=saved.find(f=>f.id===defaultId);
-    if(found){ currentFileId=found.id; currentFileName=found.name; buildFileDropdown(); loadRecentTransactions(); return; }
+    const f=saved.find(x=>x.id===defaultId);
+    if(f){ currentFileId=f.id; currentFileName=f.name; buildFileDropdown(); loadRecentTransactions(); return; }
   }
-  if(saved.length){
-    currentFileId=saved[0].id; currentFileName=saved[0].name;
-    localStorage.setItem("defaultFileId",currentFileId);
-    buildFileDropdown(); loadRecentTransactions(); return;
-  }
+  if(saved.length){ currentFileId=saved[0].id; currentFileName=saved[0].name; localStorage.setItem("defaultFileId",currentFileId); buildFileDropdown(); loadRecentTransactions(); return; }
   findExcelFiles();
 }
-
 async function findExcelFiles(){
   try{
-    const res=await gapi.client.drive.files.list({q:folderQuery(),fields:"files(id,name)",pageSize:50});
+    const res=await gapi.client.drive.files.list({q:folderQ(),fields:"files(id,name)",pageSize:50});
     const files=res.result.files||[];
-    if(files.length){
-      myFiles=files.map(f=>({id:f.id,name:f.name}));
-      saveFileList(myFiles);
-      if(!currentFileId){ currentFileId=myFiles[0].id; currentFileName=myFiles[0].name; localStorage.setItem("defaultFileId",currentFileId); }
-      buildFileDropdown(); loadRecentTransactions();
-      if(currentFileId) syncFromDrive();
-    } else {
-      document.getElementById("fileNameDisplay").textContent="ماكو ملفات";
-    }
-  } catch(e){ showToast("خطأ بالبحث عن الملفات"); }
+    if(files.length){ myFiles=files.map(f=>({id:f.id,name:f.name})); saveFileList(myFiles); if(!currentFileId){ currentFileId=myFiles[0].id; currentFileName=myFiles[0].name; localStorage.setItem("defaultFileId",currentFileId); } buildFileDropdown(); loadRecentTransactions(); if(currentFileId) syncFromDrive(); }
+    else document.getElementById("fileNameDisplay").textContent="ماكو ملفات";
+  } catch(e){ showToast("خطأ بالبحث عن الملفات"); console.error("findExcelFiles:",e); }
 }
-
 async function refreshFileList(){
   try{
-    const res=await gapi.client.drive.files.list({q:folderQuery(),fields:"files(id,name)",pageSize:50});
-    const files=res.result.files||[];
-    const merged=[]; const seen=new Set();
+    const res=await gapi.client.drive.files.list({q:folderQ(),fields:"files(id,name)",pageSize:50});
+    const files=res.result.files||[]; const merged=[]; const seen=new Set();
     for(const f of files){ merged.push({id:f.id,name:f.name}); seen.add(f.id); }
     for(const f of myFiles){ if(!seen.has(f.id)){ merged.push(f); seen.add(f.id); } }
     myFiles=merged; saveFileList(myFiles);
     if(!currentFileId&&myFiles.length){ currentFileId=myFiles[0].id; currentFileName=myFiles[0].name; localStorage.setItem("defaultFileId",currentFileId); }
-    buildFileDropdown();
-    showToast("✅ تم تحديث القائمة");
-  } catch(e){ showToast("فشل تحديث القائمة"); }
+    buildFileDropdown(); showToast("✅ تم تحديث القائمة");
+  } catch(e){ showToast("فشل تحديث القائمة"); console.error("refreshFileList:",e); }
 }
-
 function buildFileDropdown(){
   document.getElementById("fileNameDisplay").textContent=currentFileName||"اختر ملف...";
-  const list=document.getElementById("fileListItems");
-  list.innerHTML=myFiles.map(f=>
-    `<div class="file-item${f.id===currentFileId?" active":""}" onclick="switchFile('${f.id}','${esc(f.name)}')">
-      📄 ${esc(f.name)}
-      <span class="check">✓</span>
-    </div>`
+  document.getElementById("fileListItems").innerHTML=myFiles.map(f=>
+    `<div class="file-item${f.id===currentFileId?" active":""}" onclick="switchFile('${f.id}','${esc(f.name)}')">📄 ${esc(f.name)}<span class="check">✓</span></div>`
   ).join("");
 }
-
-function switchFile(id,name){
-  currentFileId=id; currentFileName=name;
-  localStorage.setItem("defaultFileId",id);
-  buildFileDropdown();
-  closeFileDropdown();
-  loadRecentTransactions();
-  setSyncStatus("✅","var(--success)");
-  showToast(`📁 ${name}`);
-}
-
-function toggleFileDropdown(){
-  const dd=document.getElementById("fileDropdown");
-  dd.style.display=dd.style.display==="block"?"none":"block";
-}
-
+function switchFile(id,name){ currentFileId=id; currentFileName=name; localStorage.setItem("defaultFileId",id); buildFileDropdown(); closeFileDropdown(); loadRecentTransactions(); setSyncStatus("✅","var(--success)"); showToast(`📁 ${name}`); }
+function toggleFileDropdown(){ const dd=document.getElementById("fileDropdown"); dd.style.display=dd.style.display==="block"?"none":"block"; }
 function closeFileDropdown(){ document.getElementById("fileDropdown").style.display="none"; }
-document.addEventListener("click",function(e){
-  if(!e.target.closest("#fileSelector")) closeFileDropdown();
-});
+document.addEventListener("click",e=>{ if(!e.target.closest("#fileSelector")) closeFileDropdown(); });
+window.switchFile=switchFile; window.toggleFileDropdown=toggleFileDropdown; window.refreshFileList=refreshFileList;
 
-async function createNewFile(){
-  closeFileDropdown();
-  const name=prompt("اسم الملف الجديد (مثال: مصاريف البيت.xlsx):");
-  if(!name||!name.trim()) return;
-  const fileName=name.trim().endsWith(".xlsx")?name.trim():name.trim()+".xlsx";
-  showProgress("📁 إنشاء ملف جديد",`جاري إنشاء ${fileName}...`);
-  try{
-    const wb=XLSX.utils.book_new();
-    const ws=XLSX.utils.aoa_to_sheet([["التاريخ","اسم المحل","البراند","المبلغ","المصاريف","سببها","_id"]]);
-    ws['!cols']=[{wch:12},{wch:20},{wch:12},{wch:10},{wch:15},{wch:25},{wch:0}];
-    XLSX.utils.book_append_sheet(wb,ws,"كشف حساب");
-    const wbOut=XLSX.write(wb,{type:"array",bookType:"xlsx"});
-    const blob=new Blob([wbOut],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
-    const boundary="----"+(Math.random()*1e16).toString(36);
-    const metadata={name:fileName,mimeType:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",parents:[appFolderId]};
-    const multipart=[];
-    multipart.push("--"+boundary); multipart.push("Content-Type: application/json; charset=UTF-8"); multipart.push("");
-    multipart.push(JSON.stringify(metadata));
-    multipart.push("--"+boundary); multipart.push("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); multipart.push("");
-    multipart.push(blob); multipart.push("--"+boundary+"--");
-    const body=multipart.join("\r\n");
-    const res=await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",{
-      method:"POST", headers:{"Authorization":"Bearer "+accessToken,"Content-Type":"multipart/related; boundary="+boundary}, body
-    });
-    const result=await res.json();
-    myFiles.unshift({id:result.id,name:fileName});
-    saveFileList(myFiles);
-    switchFile(result.id,fileName);
-    hideProgress();
-    showToast(`✅ تم إنشاء ${fileName}`);
-  } catch(e){ hideProgress(); showToast("فشل إنشاء الملف"); }
-}
-
-function openInDrive(){
-  if(!currentFileId){ showToast("ماكو ملف مختار"); return; }
-  window.open(`https://drive.google.com/file/d/${currentFileId}/view`,"_blank");
-}
+function openInDrive(){ if(!currentFileId){ showToast("ماكو ملف مختار"); return; } window.open(`https://drive.google.com/file/d/${currentFileId}/view`,"_blank"); }
 window.openInDrive=openInDrive;
 
-function getDateStr(){
-  const d=new Date();
-  const dd=String(d.getDate()).padStart(2,"0");
-  const mm=String(d.getMonth()+1).padStart(2,"0");
-  const yyyy=d.getFullYear();
-  return `${dd}/${mm}/${yyyy}`;
-}
+function getDateStr(){ const d=new Date(); return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`; }
+function getTimeStr(){ const d=new Date(); return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; }
 
-// ===== INPUT FORM =====
+// ===== FORM =====
 function setType(t){
   currentType=t;
   document.getElementById("toggleIn").className="toggle-btn"+(t==="in"?" active-in":"");
   document.getElementById("toggleOut").className="toggle-btn"+(t==="out"?" active-out":"");
-  document.getElementById("reasonRow").style.display=t==="out"?"block":"none";
 }
 window.setType=setType;
 
-function toggleBrand(){
-  const ck=document.getElementById("brandCheck");
-  document.getElementById("brandInput").style.display=ck.checked?"block":"none";
-}
-window.toggleBrand=toggleBrand;
-
 function resetForm(){
   document.getElementById("amountInput").value="";
+  npRaw="";
   document.getElementById("shopInput").value="";
-  document.getElementById("expenseInput").value="";
-  document.getElementById("reasonInput").value="";
-  document.getElementById("brandCheck").checked=false;
-  document.getElementById("brandInput").style.display="none";
-  document.getElementById("brandInput").value="";
   document.getElementById("sentenceInput").value="";
 }
 
 function fillFormFromData(data){
-  document.getElementById("amountInput").value=data.amount||"";
+  const num=Math.abs(data.amount||0);
+  npRaw=num?String(num):"";
+  document.getElementById("amountInput").value=num?fmtNum(num):"";
   setType(data.type||"out");
   document.getElementById("shopInput").value=data.shop||"";
-  document.getElementById("expenseInput").value=data.expense||"";
-  document.getElementById("reasonInput").value=data.reason||"";
-  if(data.brand&&data.brand!=="غير معروف"){
-    document.getElementById("brandCheck").checked=true;
-    document.getElementById("brandInput").style.display="block";
-    document.getElementById("brandInput").value=data.brand;
-  }
 }
 
 function addTransaction(){
   if(!currentFileId){ showToast("اختر ملف أولاً"); return; }
-  const amount=parseFloat(document.getElementById("amountInput").value);
-  if(!amount||amount<=0){ showToast("أدخل المبلغ"); return; }
+  const rawVal=document.getElementById("amountInput").value.replace(/,/g,"");
+  const amount=parseFloat(rawVal);
+  if(!amount||amount<=0){ showToast("⚠️ أدخل المبلغ"); return; }
+  const shop=document.getElementById("shopInput").value.trim();
+  if(!shop){ showToast("⚠️ أدخل اسم المحل أو الشخص"); return; }
 
-  const dateStr=getDateStr();
   const txn={
     _id:Date.now()+"_"+Math.random().toString(36).slice(2,6),
-    date:dateStr,
+    date:getDateStr(), time:getTimeStr(),
     amount:currentType==="out"?-amount:amount,
-    type:currentType,
-    shop:document.getElementById("shopInput").value.trim()||"",
-    brand:document.getElementById("brandCheck").checked?document.getElementById("brandInput").value.trim():"",
-    expense:document.getElementById("expenseInput").value.trim()||"",
-    reason:currentType==="out"?document.getElementById("reasonInput").value.trim():""
+    type:currentType, shop
   };
-
   saveTxn(currentFileId,txn);
   setSyncStatus("⏳","#d97706");
-  showToast(`✅ ${fmtNumber(amount)} د.ع - ${currentType==="in"?"استلام":"صرف"}`);
+  showToast(`✅ ${fmtNum(amount)} د.ع - ${currentType==="in"?"استلام":"صرف"}`);
   resetForm();
   loadRecentTransactions();
-  syncToDrive();
+  debounceSync();
 }
 window.addTransaction=addTransaction;
 
-// ===== AI ANALYSIS (fallback - fills form fields) =====
+// ===== DEBOUNCED SYNC =====
+function debounceSync(){
+  if(syncTimer) clearTimeout(syncTimer);
+  syncTimer=setTimeout(()=>{ syncTimer=null; syncToDrive(); },2000);
+}
+
+// ===== AI =====
 async function analyzeSentence(){
   const text=document.getElementById("sentenceInput").value.trim();
   if(!text){ showToast("اكتب الجملة أولاً"); return; }
-  let apiKey=localStorage.getItem("gemini_api_key");
-  if(!apiKey||apiKey==="skip"||apiKey.length<10) apiKey=EMBEDDED_KEY;
-
+  const apiKey=localStorage.getItem("gemini_api_key");
   const btn=document.getElementById("analyzeBtn");
+  if(!apiKey||apiKey==="skip"||apiKey.length<10){ showToast("أدخل مفتاح Gemini أولاً"); return; }
   btn.disabled=true; btn.textContent="جاري...";
-
+  const controller=new AbortController();
+  const timeoutId=setTimeout(()=>controller.abort(),GEMINI_TIMEOUT);
   try{
-    const prompt=`أنت مساعد محاسبي دقيق. حلل الجملة التالية واستخرج المعلومات.
-أعد فقط JSON صحيح (بدون markdown) بهذا الشكل:
-{"amount":<رقم>,"type":"in/out","shop":"اسم المحل أو الشخص","brand":"FOREVER/CHARACTER/ROSELLA/FUTURE/غير معروف","expense":"نوع المصاريف","reason":"سبب المصروف"}
-
-قواعد:
-- type: in=استلام/قبض/وصول, out=صرف/دفع/شراء/خصم
-- amount: رقم فقط بدون فواصل
-- shop: اسم المحل أو الشخص المذكور
-- brand: حدد من اسم المحل إن أمكن
-- expense: تصنيف المصاريف
-- reason: سبب العملية
-
+    const prompt=`أنت مساعد محاسبي. حلل الجملة وأعد JSON فقط بدون markdown:
+{"amount":<رقم>,"type":"in/out","shop":"الاسم"}
 الجملة: "${text}"`;
-
-    const res=await fetch(`${GEMINI_API}?key=${apiKey}`,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.1,maxOutputTokens:500}})
-    });
+    const res=await fetch(`${GEMINI_API}?key=${apiKey}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.1,maxOutputTokens:150}}),signal:controller.signal});
+    clearTimeout(timeoutId);
     const result=await res.json();
     const content=result?.candidates?.[0]?.content?.parts?.[0]?.text||"";
-
     const cleaned=content.replace(/```json\n?/g,"").replace(/```\n?/g,"").trim();
-    const jsonStart=cleaned.indexOf('{');
-    const jsonEnd=cleaned.lastIndexOf('}');
-    if(jsonStart===-1||jsonEnd===-1) throw new Error("No JSON");
-
-    const data=JSON.parse(cleaned.substring(jsonStart,jsonEnd+1));
+    const s=cleaned.indexOf('{'); const e=cleaned.lastIndexOf('}');
+    if(s===-1||e===-1) throw new Error("no json");
+    const data=JSON.parse(cleaned.substring(s,e+1));
     fillFormFromData(data);
-    showToast(`✅ تم التحليل - المبلغ: ${fmtNumber(data.amount)} د.ع`);
-  } catch(e){
-    showToast("AI ما استجاب، استخدام التحليل الأساسي");
-    const data=localAnalyze(text);
-    fillFormFromData(data);
+    showToast(`✅ تم التحليل - ${fmtNum(data.amount)} د.ع`);
+  } catch(err){
+    if(err.name==="AbortError") showToast("❌ انتهت مهلة الطلب");
+    else { const data=localAnalyze(text); fillFormFromData(data); showToast("AI ما استجاب، تحليل أساسي"); }
   }
+  clearTimeout(timeoutId);
   btn.disabled=false; btn.textContent="🔍 تحليل";
 }
 window.analyzeSentence=analyzeSentence;
 
-// ===== LOCAL ANALYZE (no API needed) =====
 function localAnalyze(text){
-  const result={amount:0,type:"out",shop:"",brand:"غير معروف",expense:"",reason:""};
-  const inWords=["استلمت","قبضت","وصلني","تحويل","إيداع","استلام","قبض","وارد"];
-  const outWords=["صرفت","دفعت","شراء","خصم","دفع","صرف","منصرف","مصروف","دفعنا"];
-  for(const w of inWords){ if(text.includes(w)){ result.type="in"; break; } }
-  for(const w of outWords){ if(text.includes(w)){ result.type="out"; break; } }
+  const r={amount:0,type:"out",shop:""};
+  const inW=["استلمت","قبضت","وصلني","تحويل","إيداع","استلام","قبض","وارد"];
+  const outW=["صرفت","دفعت","شراء","خصم","دفع","صرف","منصرف","مصروف"];
+  for(const w of inW){ if(text.includes(w)){ r.type="in"; break; } }
+  for(const w of outW){ if(text.includes(w)){ r.type="out"; break; } }
   const nums=text.match(/\d[\d,]*\d|\d+/g);
-  if(nums) result.amount=parseInt(nums[0].replace(/,/g,""),10);
-  const shopMatch=text.match(/من\s+(\S+)/)||text.match(/لـ\s+(\S+)/)||text.match(/الى\s+(\S+)/);
-  if(shopMatch) result.shop=shopMatch[1];
-  const expMatch=text.match(/على\s+(.+?)(?:\s*من|\s*لـ|\s*$)/)||text.match(/ع\s+(.+?)(?:\s*من|\s*لـ|\s*$)/);
-  if(expMatch) result.expense=expMatch[1].trim();
-  const reasonMatch=text.match(/سبب[هاه]?\s+(.+?)$/)||text.match(/لأن\s+(.+?)$/);
-  if(reasonMatch) result.reason=reasonMatch[1].trim();
-  const shop=result.shop.toUpperCase();
-  if(shop.includes("FOREVER")||shop.includes("فور")) result.brand="FOREVER";
-  else if(shop.includes("CHARACTER")||shop.includes("كاركتر")) result.brand="CHARACTER";
-  else if(shop.includes("ROSELLA")||shop.includes("روز")) result.brand="ROSELLA";
-  else if(shop.includes("FUTURE")||shop.includes("فيوتشر")) result.brand="FUTURE";
-  return result;
+  if(nums) r.amount=parseInt(nums[0].replace(/,/g,""),10);
+  const sm=text.match(/من\s+(\S+)/)||text.match(/لـ\s+(\S+)/);
+  if(sm) r.shop=sm[1];
+  return r;
 }
 
 // ===== SYNC STATUS =====
-function setSyncStatus(text,color){
-  const el=document.getElementById("syncStatus");
-  if(el){ el.textContent=text; el.style.color=color||"var(--sub)"; }
-}
+function setSyncStatus(t,c){ const el=document.getElementById("syncStatus"); if(el){ el.textContent=t; el.style.color=c||"var(--sub)"; } }
 
-// ===== SAVE LOCALLY FIRST, SYNC IN BACKGROUND =====
-
+// ===== SYNC TO DRIVE (with mutex) =====
 async function syncToDrive(){
   if(!currentFileId){ setSyncStatus("⚠️","var(--danger)"); return; }
+  if(syncLock){ setSyncStatus("🔄","#0d6efd"); return; }
+  syncLock=true;
   setSyncStatus("🔄","#0d6efd");
   try{
-    const dlRes=await fetch(`https://www.googleapis.com/drive/v3/files/${currentFileId}?alt=media`,{
-      headers:{"Authorization":"Bearer "+accessToken}
-    });
+    const dlRes=await fetch(`https://www.googleapis.com/drive/v3/files/${currentFileId}?alt=media`,{headers:{"Authorization":"Bearer "+accessToken}});
     let wb,ws,existingIds=new Set();
     if(dlRes.ok){
-      const blob=await dlRes.blob();
-      const buffer=await blob.arrayBuffer();
-      wb=XLSX.read(buffer,{type:"array"});
-      ws=wb.Sheets[wb.SheetNames[0]];
+      const buf=await dlRes.arrayBuffer(); wb=XLSX.read(buf,{type:"array"}); ws=wb.Sheets[wb.SheetNames[0]];
       const rows=XLSX.utils.sheet_to_json(ws,{header:1});
-      for(let i=1;i<rows.length;i++){
-        const r=rows[i];
-        if(r&&r[6]) existingIds.add(String(r[6]));
-      }
+      for(let i=1;i<rows.length;i++){ if(rows[i]&&rows[i][4]) existingIds.add(String(rows[i][4])); }
     } else {
-      wb=XLSX.utils.book_new();
-      ws=XLSX.utils.aoa_to_sheet([["التاريخ","اسم المحل","البراند","المبلغ","المصاريف","سببها","_id"]]);
-      ws['!cols']=[{wch:12},{wch:20},{wch:12},{wch:10},{wch:15},{wch:25},{wch:0}];
-      XLSX.utils.book_append_sheet(wb,ws,"كشف حساب");
+      wb=XLSX.utils.book_new(); ws=XLSX.utils.aoa_to_sheet([["التاريخ","الوقت","اسم المحل","المبلغ","_id"]]); ws['!cols']=[{wch:12},{wch:8},{wch:20},{wch:12},{wch:0}]; XLSX.utils.book_append_sheet(wb,ws,"كشف حساب");
     }
-
     const localTxns=getTxns(currentFileId);
     const newRows=[];
-    for(const t of localTxns){
-      if(existingIds.has(t._id)) continue;
-      newRows.push([t.date,t.shop||"",t.brand||"",String(t.amount||"0"),t.expense||"",t.reason||"",t._id||""]);
-    }
-
-    if(!newRows.length){ setSyncStatus("✅","var(--success)"); return; }
-
-    const ref=XLSX.utils.decode_range(ws["!ref"]||"A1:G1");
-    for(let i=0;i<newRows.length;i++){
-      const row=ref.e.r+1+i;
-      for(let col=0;col<newRows[i].length;col++){
-        const cellRef=XLSX.utils.encode_cell({r:row,c:col});
-        ws[cellRef]={t:"s",v:newRows[i][col]};
-      }
-    }
-    ws["!ref"]=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:ref.e.r+newRows.length,c:6}});
-
+    for(const t of localTxns){ if(!existingIds.has(t._id)) newRows.push([t.date,t.time||"",t.shop||"",String(t.amount||"0"),t._id||""]); }
+    if(!newRows.length){ setSyncStatus("✅","var(--success)"); syncLock=false; return; }
+    const ref=XLSX.utils.decode_range(ws["!ref"]||"A1:E1");
+    for(let i=0;i<newRows.length;i++){ const row=ref.e.r+1+i; for(let c=0;c<newRows[i].length;c++){ ws[XLSX.utils.encode_cell({r:row,c})]={t:"s",v:newRows[i][c]}; } }
+    ws["!ref"]=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:ref.e.r+newRows.length,c:4}});
     const outWb=XLSX.write(wb,{type:"array",bookType:"xlsx"});
     const outBlob=new Blob([outWb],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
     const form=new FormData();
     form.append("metadata",new Blob([JSON.stringify({name:currentFileName})],{type:"application/json"}));
     form.append("file",outBlob,currentFileName);
-    const upRes=await fetch(`https://www.googleapis.com/upload/drive/v3/files/${currentFileId}?uploadType=multipart`,{
-      method:"PATCH", headers:{"Authorization":"Bearer "+accessToken}, body:form
-    });
-    if(!upRes.ok) throw new Error("فشل رفع");
+    const upRes=await fetch(`https://www.googleapis.com/upload/drive/v3/files/${currentFileId}?uploadType=multipart`,{method:"PATCH",headers:{"Authorization":"Bearer "+accessToken},body:form});
+    if(!upRes.ok) throw new Error("رفع "+upRes.status);
     setSyncStatus("✅","var(--success)");
   } catch(e){
     setSyncStatus("⚠️","var(--danger)");
+    console.error("syncToDrive error:",e);
   }
+  syncLock=false;
 }
 window.syncToDrive=syncToDrive;
 
-// ===== LOCAL STORAGE (per-file) =====
-function getTxns(fileId){ const k="txns_"+(fileId||"default"); try{ return JSON.parse(localStorage.getItem(k)||"[]"); }catch{ return []; } }
-function saveTxns(fileId,data){ const k="txns_"+(fileId||"default"); localStorage.setItem(k,JSON.stringify(data)); }
-function saveTxn(fileId,txn){ const c=getTxns(fileId); c.unshift(txn); saveTxns(fileId,c); }
-function mergeTxns(fileId,remote){ const local=getTxns(fileId); const ids=new Set(local.map(t=>t._id)); let added=0; for(const t of remote){ if(!ids.has(t._id)){ local.push(t); added++; ids.add(t._id); } } if(added){ saveTxns(fileId,local); loadRecentTransactions(); } }
+// ===== LOCAL STORAGE =====
+function getTxns(id){ const k="txns_"+(id||"default"); try{ return JSON.parse(localStorage.getItem(k)||"[]"); }catch{ return []; } }
+function saveTxns(id,data){ localStorage.setItem("txns_"+(id||"default"),JSON.stringify(data)); }
+function saveTxn(id,txn){ const c=getTxns(id); c.unshift(txn); saveTxns(id,c); }
+
+function mergeTxns(id,remote){
+  const local=getTxns(id);
+  const ids=new Set(local.map(t=>t._id));
+  const newOnes=[];
+  for(const t of remote){ if(!ids.has(t._id)){ newOnes.push(t); ids.add(t._id); } }
+  if(newOnes.length){
+    saveTxns(id,[...newOnes,...local]);
+    loadRecentTransactions();
+  }
+}
 
 async function syncFromDrive(){
   if(!currentFileId||!accessToken) return;
   try{
-    const dlRes=await fetch(`https://www.googleapis.com/drive/v3/files/${currentFileId}?alt=media`,{
-      headers:{"Authorization":"Bearer "+accessToken}
-    });
-    if(!dlRes.ok) return;
-    const buffer=await dlRes.arrayBuffer();
-    const wb=XLSX.read(buffer,{type:"array"});
-    const ws=wb.Sheets[wb.SheetNames[0]];
-    const rows=XLSX.utils.sheet_to_json(ws,{header:1});
-    const remote=[];
+    const dlRes=await fetch(`https://www.googleapis.com/drive/v3/files/${currentFileId}?alt=media`,{headers:{"Authorization":"Bearer "+accessToken}});
+    if(!dlRes.ok) throw new Error("تحميل "+dlRes.status);
+    const buf=await dlRes.arrayBuffer(); const wb=XLSX.read(buf,{type:"array"}); const ws=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(ws,{header:1}); const remote=[];
     for(let i=1;i<rows.length;i++){
       const r=rows[i]; if(!r||!r[3]) continue;
-      remote.push({
-        _id:r[6]||Date.now()+"_"+i, date:r[0]||"",
-        shop:r[1]||"", brand:r[2]||"", amount:parseNumber(r[3])||0,
-        expense:r[4]||"", reason:r[5]||""
-      });
+      const amt=parseNum(r[3])||0;
+      remote.push({_id:r[4]||Date.now()+"_"+i,date:r[0]||"",time:r[1]||"",shop:r[2]||"",amount:amt,type:amt>=0?"in":"out"});
     }
     mergeTxns(currentFileId,remote);
-  } catch(e){}
+  } catch(e){
+    console.error("syncFromDrive error:",e);
+  }
 }
 
-// ===== RECENT TRANSACTIONS =====
+// ===== RECENT =====
 function loadRecentTransactions(){
-  const list=getTxns(currentFileId).slice(0,10);
+  const list=getTxns(currentFileId).slice(0,3);
   const wrap=document.getElementById("recentList");
   if(!list.length){ wrap.innerHTML='<div class="empty-state">ماكو معاملات بعد</div>'; return; }
   wrap.innerHTML=list.map(t=>{
-    const isIn=t.type==="in";
-    const icon=isIn?"bi-arrow-down-circle":"bi-arrow-up-circle";
-    const cls=isIn?"in":"out";
-    const sign=isIn?"+":"-";
+    const isIn=t.amount>0; const cls=isIn?"in":"out"; const sign=isIn?"+":"-";
     return `<div class="recent-item">
-      <div class="recent-icon ${cls}"><i class="bi ${icon}"></i></div>
+      <div class="recent-icon ${cls}"><i class="bi bi-arrow-${isIn?"down":"up"}-circle"></i></div>
       <div class="recent-info">
-        <div class="recent-title">${esc(t.shop||t.expense||"معاملة")}</div>
-        <div class="recent-meta">${t.date||""} ${t.brand?"• "+t.brand:""} ${t.expense?"• "+t.expense:""}</div>
+        <div class="recent-title">${esc(t.shop||"معاملة")}</div>
+        <div class="recent-meta">${t.date||""}</div>
       </div>
-      <div class="recent-amount ${cls}">${sign}${fmtNumber(t.amount)}</div>
+      <div class="recent-amount ${cls}">${sign}${fmtNum(t.amount)}</div>
     </div>`;
   }).join("");
 }
@@ -872,32 +893,28 @@ window.loadRecentTransactions=loadRecentTransactions;
 // ===== STATEMENT =====
 function loadStatement(){
   transactions=getTxns(currentFileId);
+  selectedIds.clear(); updateDelBar();
   applyFilter();
-  renderSummary();
   switchTab("statement");
-  // Background sync from Drive for fresh data
   if(currentFileId&&accessToken) syncFromDrive();
 }
 window.loadStatement=loadStatement;
 
-function parseNumber(v){
-  if(typeof v==="number") return v;
-  const s=String(v||"").replace(/[^0-9.-]/g,"");
-  return s?parseFloat(s):null;
-}
+function parseNum(v){ if(typeof v==="number") return v; const s=String(v||"").replace(/[^0-9.-]/g,""); return s?parseFloat(s):null; }
 
 function applyFilter(){
-  let filtered=transactions;
-  if(currentFilter==="in") filtered=transactions.filter(t=>t.amount>0);
-  else if(currentFilter==="out") filtered=transactions.filter(t=>t.amount<0);
-  renderStatement(filtered);
-  renderSummary(filtered);
+  let f=transactions;
+  if(currentFilter==="in") f=transactions.filter(t=>t.amount>0);
+  else if(currentFilter==="out") f=transactions.filter(t=>t.amount<0);
+  renderStatement(f);
+  renderNet(f);
 }
 
 function setFilter(f){
   currentFilter=f;
   document.querySelectorAll(".toolbar-btn").forEach(b=>b.classList.remove("active"));
   document.getElementById("filter"+f.charAt(0).toUpperCase()+f.slice(1)).classList.add("active");
+  selectedIds.clear(); updateDelBar();
   applyFilter();
 }
 window.setFilter=setFilter;
@@ -906,68 +923,213 @@ function applyDateFilter(){
   const from=document.getElementById("dateFrom").value;
   const to=document.getElementById("dateTo").value;
   if(!from&&!to){ applyFilter(); return; }
-  const fromDate=from?new Date(from.replace(/-/g,"/")):null;
-  const toDate=to?new Date(to.replace(/-/g,"/")):null;
+  const fromDate=from?new Date(from):null;
+  const toDate=to?new Date(to):null;
   if(toDate) toDate.setHours(23,59,59);
-
-  const filtered=transactions.filter(t=>{
-    const parts=t.date.split("/");
-    if(parts.length!==3) return true;
-    const tDate=new Date(`${parts[2]}/${parts[1]}/${parts[0]}`);
-    if(fromDate&&tDate<fromDate) return false;
-    if(toDate&&tDate>toDate) return false;
+  const f=transactions.filter(t=>{
+    const pts=t.date.split("/"); if(pts.length!==3) return true;
+    const td=new Date(`${pts[2]}-${pts[1]}-${pts[0]}`);
+    if(fromDate&&td<fromDate) return false;
+    if(toDate&&td>toDate) return false;
     return true;
   });
-  renderStatement(filtered);
-  renderSummary(filtered);
+  renderStatement(f); renderNet(f);
 }
 window.applyDateFilter=applyDateFilter;
-
-function clearDateFilter(){
-  document.getElementById("dateFrom").value="";
-  document.getElementById("dateTo").value="";
-  applyFilter();
-}
+function clearDateFilter(){ document.getElementById("dateFrom").value=""; document.getElementById("dateTo").value=""; applyFilter(); }
 window.clearDateFilter=clearDateFilter;
 
 function renderStatement(rows){
-  const tbody=document.getElementById("statementBody");
+  const tbody=document.getElementById("stmtBody");
   if(!rows.length){
-    tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--sub);padding:20px">لا توجد معاملات</td></tr>';
+    tbody.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--sub);padding:24px">لا توجد معاملات</td></tr>';
     return;
   }
-  // Sort by date ascending for running balance
   const sorted=[...rows].sort((a,b)=>{
     const da=a.date.split("/"); const db=b.date.split("/");
     if(da.length!==3||db.length!==3) return 0;
-    return new Date(da[2],da[1]-1,da[0])-new Date(db[2],db[1]-1,db[0]);
+    const diff=new Date(da[2],da[1]-1,da[0])-new Date(db[2],db[1]-1,db[0]);
+    if(diff!==0) return diff;
+    return (a.time||"").localeCompare(b.time||"");
   });
   let balance=0;
   tbody.innerHTML=sorted.map(t=>{
-    const inAm=t.amount>0?t.amount:0;
-    const outAm=t.amount<0?Math.abs(t.amount):0;
-    balance+=inAm-outAm;
-    return `<tr>
-      <td>${esc(t.shop||"—")}</td>
-      <td style="color:var(--success);font-weight:800">${inAm?fmtNumber(inAm):""}</td>
-      <td style="color:var(--danger);font-weight:800">${outAm?fmtNumber(outAm):""}</td>
-      <td>${esc(t.date)}</td>
-      <td style="font-weight:900;color:${balance>=0?"var(--success)":"var(--danger)"}">${fmtNumber(balance)}</td>
+    const isIn=t.amount>0; const sign=isIn?"+":"-";
+    balance+=t.amount;
+    const amtCls=isIn?"pos":"neg";
+    const balCls=balance>=0?"pos":"neg";
+    const sel=selectedIds.has(t._id);
+    return `<tr class="${sel?"selected":""}" data-id="${esc(t._id||"")}"
+      oncontextmenu="rowContextMenu(event,'${esc(t._id||"")}');return false;"
+      ontouchstart="startLP(event,'${esc(t._id||"")}')" ontouchend="cancelLP()" ontouchmove="cancelLP()">
+      <td class="td-sel"><input type="checkbox" class="row-cb" ${sel?"checked":""} onchange="toggleRowSel('${esc(t._id||"")}',this)"></td>
+      <td class="td-name">${esc(t.shop||"—")}</td>
+      <td class="td-amt ${amtCls}">${sign}${fmtNum(t.amount)}</td>
+      <td class="td-bal ${balCls}">${fmtNum(balance)}</td>
     </tr>`;
   }).join("");
+  requestAnimationFrame(()=>{
+    const pg=document.getElementById("pageStatement");
+    pg.scrollTop=pg.scrollHeight;
+  });
 }
 
-function renderSummary(filtered){
-  const data=filtered||transactions;
-  const totalIn=data.reduce((s,t)=>s+(t.amount>0?t.amount:0),0);
-  const totalOut=data.reduce((s,t)=>s+(t.amount<0?Math.abs(t.amount):0),0);
-  const net=totalIn-totalOut;
-  document.getElementById("totalIn").textContent=fmtNumber(totalIn);
-  document.getElementById("totalOut").textContent=fmtNumber(totalOut);
-  document.getElementById("totalNet").textContent=fmtNumber(net);
-  document.getElementById("totalNet").style.color=net>=0?"var(--success)":"var(--danger)";
-  document.getElementById("summaryRow").style.display="flex";
+function renderNet(data){
+  const arr=data||transactions;
+  const net=arr.reduce((s,t)=>s+t.amount,0);
+  const el=document.getElementById("totalNet");
+  el.textContent=(net>=0?"+":"-")+fmtNum(net)+" د.ع";
+  el.style.color=net>=0?"var(--success)":"var(--danger)";
+  positionNetBar();
+  document.getElementById("netBar").style.display="flex";
 }
+
+function positionNetBar(){
+  const tabH=document.querySelector(".bottom-tabs").offsetHeight;
+  const delBarVisible=document.getElementById("delBar").classList.contains("show");
+  const delH=delBarVisible?document.getElementById("delBar").offsetHeight:0;
+  document.getElementById("netBar").style.bottom=(tabH+delH)+"px";
+}
+
+// ===== SELECTION =====
+function toggleSelectAll(cb){
+  const rows=document.querySelectorAll("#stmtBody tr[data-id]");
+  rows.forEach(r=>{
+    const id=r.getAttribute("data-id");
+    if(cb.checked) selectedIds.add(id);
+    else selectedIds.delete(id);
+    r.classList.toggle("selected",cb.checked);
+    const rcb=r.querySelector(".row-cb");
+    if(rcb) rcb.checked=cb.checked;
+  });
+  updateDelBar();
+}
+window.toggleSelectAll=toggleSelectAll;
+
+function toggleRowSel(id,cb){
+  if(cb.checked) selectedIds.add(id);
+  else selectedIds.delete(id);
+  const row=document.querySelector(`#stmtBody tr[data-id="${CSS.escape(id)}"]`);
+  if(row) row.classList.toggle("selected",cb.checked);
+  const allCb=document.getElementById("selectAll");
+  const allRows=document.querySelectorAll("#stmtBody tr[data-id]");
+  allCb.checked=allRows.length>0&&selectedIds.size===allRows.length;
+  updateDelBar();
+}
+window.toggleRowSel=toggleRowSel;
+
+function updateDelBar(){
+  const bar=document.getElementById("delBar");
+  if(selectedIds.size>0){
+    bar.classList.add("show");
+    document.getElementById("delBarCount").textContent=selectedIds.size+" محدد";
+  } else {
+    bar.classList.remove("show");
+  }
+  positionNetBar();
+}
+
+function cancelSelection(){
+  selectedIds.clear();
+  document.querySelectorAll("#stmtBody tr[data-id]").forEach(r=>{
+    r.classList.remove("selected");
+    const cb=r.querySelector(".row-cb"); if(cb) cb.checked=false;
+  });
+  document.getElementById("selectAll").checked=false;
+  updateDelBar();
+}
+window.cancelSelection=cancelSelection;
+
+function deleteSelected(){
+  if(!selectedIds.size) return;
+  if(!confirm(`حذف ${selectedIds.size} معاملة؟`)) return;
+  const txns=getTxns(currentFileId).filter(t=>!selectedIds.has(t._id));
+  saveTxns(currentFileId,txns);
+  selectedIds.clear();
+  document.getElementById("selectAll").checked=false;
+  updateDelBar();
+  loadRecentTransactions();
+  transactions=getTxns(currentFileId);
+  applyFilter();
+  syncToDrive();
+  showToast("🗑 تم الحذف");
+}
+window.deleteSelected=deleteSelected;
+
+// ===== LONG PRESS =====
+let lpTimer=null;
+function startLP(e,id){ cancelLP(); lpTimer=setTimeout(()=>openTxnModal(id),500); }
+function cancelLP(){ if(lpTimer){ clearTimeout(lpTimer); lpTimer=null; } }
+function rowContextMenu(e,id){ cancelLP(); openTxnModal(id); }
+window.startLP=startLP; window.cancelLP=cancelLP; window.rowContextMenu=rowContextMenu;
+
+function openTxnModal(id){
+  activeId=id;
+  const t=getTxns(currentFileId).find(x=>x._id===id);
+  if(!t) return;
+  const isIn=t.amount>0; const sign=isIn?"+":"-";
+  document.getElementById("modalName").textContent=t.shop||"—";
+  document.getElementById("modalMeta").textContent=(t.date||"")+(t.time?" — "+t.time:"");
+  const amEl=document.getElementById("modalAmount");
+  amEl.textContent=sign+fmtNum(t.amount)+" د.ع";
+  amEl.style.color=isIn?"var(--success)":"var(--danger)";
+  document.getElementById("editForm").classList.remove("show");
+  document.getElementById("txnModal").classList.add("show");
+}
+function closeTxnModal(){ document.getElementById("txnModal").classList.remove("show"); activeId=null; }
+window.closeTxnModal=closeTxnModal;
+
+function setEditType(t){
+  editType=t;
+  document.getElementById("editToggleIn").className="toggle-btn"+(t==="in"?" active-in":"");
+  document.getElementById("editToggleOut").className="toggle-btn"+(t==="out"?" active-out":"");
+}
+window.setEditType=setEditType;
+
+function startEdit(){
+  if(!activeId) return;
+  const t=getTxns(currentFileId).find(x=>x._id===activeId);
+  if(!t) return;
+  document.getElementById("editShop").value=t.shop||"";
+  document.getElementById("editAmount").value=fmtNum(Math.abs(t.amount));
+  setEditType(t.amount>0?"in":"out");
+  document.getElementById("editForm").classList.add("show");
+}
+window.startEdit=startEdit;
+
+function saveEdit(){
+  if(!activeId) return;
+  const shop=document.getElementById("editShop").value.trim();
+  const absAmt=parseFloat(document.getElementById("editAmount").value.replace(/,/g,""));
+  if(!absAmt||absAmt<=0){ showToast("المبلغ غير صحيح"); return; }
+  const txns=getTxns(currentFileId);
+  const idx=txns.findIndex(x=>x._id===activeId);
+  if(idx===-1) return;
+  txns[idx].shop=shop;
+  txns[idx].amount=editType==="out"?-absAmt:absAmt;
+  txns[idx].type=editType;
+  saveTxns(currentFileId,txns);
+  closeTxnModal();
+  loadRecentTransactions();
+  transactions=getTxns(currentFileId);
+  applyFilter();
+  syncToDrive();
+  showToast("✅ تم التعديل");
+}
+window.saveEdit=saveEdit;
+
+function deleteSingleTxn(){
+  if(!activeId) return;
+  if(!confirm("تأكيد حذف المعاملة؟")) return;
+  const txns=getTxns(currentFileId).filter(x=>x._id!==activeId);
+  saveTxns(currentFileId,txns);
+  closeTxnModal();
+  loadRecentTransactions();
+  transactions=getTxns(currentFileId);
+  applyFilter();
+  showToast("🗑 تم الحذف");
+}
+window.deleteSingleTxn=deleteSingleTxn;
 
 // ===== TABS =====
 function switchTab(name){
@@ -985,20 +1147,13 @@ function switchTab(name){
 window.switchTab=switchTab;
 
 // ===== UTILS =====
-function fmtNumber(n){ if(n==null||isNaN(n)) return "0"; return Math.abs(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,","); }
-function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function fmtNum(n){ if(n==null||isNaN(n)) return "0"; return Math.abs(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,","); }
+function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/'/g,"&#39;").replace(/"/g,"&quot;"); }
 
 // ===== INIT =====
-document.getElementById("sentenceInput").addEventListener("input",function(){
-  document.getElementById("analyzeBtn").disabled=!this.value.trim();
-});
-document.getElementById("sentenceInput").addEventListener("keydown",function(e){
-  if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){ e.preventDefault(); if(this.value.trim()) analyzeSentence(); }
-});
+document.getElementById("sentenceInput").addEventListener("input",function(){ document.getElementById("analyzeBtn").disabled=!this.value.trim(); });
 window.onload=initGapi;
-
-// Register Service Worker with cache-busting
-if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js?v="+Date.now());
+if("serviceWorker"in navigator) navigator.serviceWorker.register("sw.js?v="+Date.now());
 </script>
 </body>
 </html>
