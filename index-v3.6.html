@@ -14,8 +14,6 @@
 <meta name="apple-mobile-web-app-title" content="مساعدي المحاسبي">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#f5f7fa;--card:#fff;--shadow:0 8px 25px rgba(0,0,0,.06);--text:#1f2a44;--sub:#6e7b96;--border:#edf2ff;--primary:#0d6efd;--pl:#eef4ff;--pb:#dbe4ff;--bottom:rgba(255,255,255,.88);--success:#16a34a;--danger:#dc2626}
@@ -29,6 +27,11 @@ body{min-height:100dvh;background:var(--bg)!important;color:var(--text);font-fam
 .top-bar h1{font-size:22px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:6px}
 .icon-btn{width:44px;height:44px;border:none;border-radius:12px;background:var(--card);box-shadow:var(--shadow);font-size:19px;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;-webkit-user-select:none;user-select:none}
 .icon-btn-sm{width:34px;height:34px;border:none;border-radius:8px;background:var(--card);font-size:15px;cursor:pointer;color:var(--sub);display:flex;align-items:center;justify-content:center;flex:0 0 34px;border:1px solid var(--pb);-webkit-user-select:none;user-select:none}
+.file-item{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;font-size:15px;font-weight:600;color:var(--text);border-bottom:1px solid var(--border)}
+.file-item:hover{background:var(--pl)}
+.file-item.active{background:var(--pl);color:var(--primary);font-weight:800}
+.file-item .check{color:var(--primary);font-size:13px;margin-right:auto;visibility:hidden}
+.file-item.active .check{visibility:visible}
 .version{font-size:10px;font-weight:700;color:var(--sub);text-align:center;margin-top:2px}
 
 /* Input Card */
@@ -54,21 +57,26 @@ body{min-height:100dvh;background:var(--bg)!important;color:var(--text);font-fam
 .recent-amount.out{color:var(--danger)}
 .empty-state{text-align:center;padding:30px;color:var(--sub);font-weight:700;font-size:16px}
 
-/* Transaction Cards */
-#cardContainer{display:flex;flex-direction:column;gap:10px;margin-top:6px}
-.txn-card{border-radius:14px;padding:14px 16px;background:var(--card);box-shadow:var(--shadow);border:1.5px solid var(--border);position:relative;transition:.15s}
-.txn-card.in{border-color:#bbf7d0}
-.txn-card.out{border-color:#fecaca}
-.txn-card.selected{background:#fef2f2;border-color:var(--danger)}
-body.dark .txn-card.selected{background:#2a1515;border-color:#7f1d1d}
-.txn-card-top{display:flex;align-items:center;gap:10px}
-.txn-card .card-cb{display:none;width:20px;height:20px;accent-color:var(--danger);cursor:pointer;flex:0 0 20px}
-.txn-card .card-cb.show{display:block}
-.txn-card-name{font-weight:800;font-size:16px;color:var(--text);flex:1;line-height:1.4;word-break:break-word}
-.txn-card-amt{font-weight:900;font-size:18px;white-space:nowrap;direction:ltr;text-align:left}
-.txn-card-amt.pos{color:var(--success)}
-.txn-card-amt.neg{color:var(--danger)}
-.txn-card-date{font-size:12px;color:var(--sub);margin-top:4px;margin-right:30px}
+/* Statement Table */
+.stmt-wrap{overflow-x:auto;margin-top:6px}
+.stmt-table{width:100%;border-collapse:collapse;font-size:15px}
+.stmt-table th{background:var(--pl);color:var(--primary);padding:11px 10px;font-weight:800;text-align:right;border-bottom:2px solid var(--pb);position:sticky;top:0;z-index:2}
+.stmt-table th.sel-col{width:36px;text-align:center}
+.stmt-table td{padding:11px 10px;border-bottom:1px solid var(--border);color:var(--text);font-size:15px}
+.stmt-table tr:last-child td{border-bottom:none}
+.stmt-table tbody tr{cursor:pointer;transition:background .12s}
+.stmt-table tbody tr:hover td{background:var(--pl)}
+.stmt-table tbody tr.selected td{background:#fef2f2}
+body.dark .stmt-table tbody tr.selected td{background:#2a1515}
+.td-name{font-weight:700;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-amt{font-weight:900;white-space:nowrap;text-align:left;direction:ltr}
+.td-amt.pos{color:var(--success)}
+.td-amt.neg{color:var(--danger)}
+.td-bal{font-weight:900;white-space:nowrap;text-align:left;direction:ltr}
+.td-bal.pos{color:var(--success)}
+.td-bal.neg{color:var(--danger)}
+.td-sel{text-align:center;width:36px}
+.row-cb{width:18px;height:18px;accent-color:var(--danger);cursor:pointer}
 
 /* Net bar */
 .net-bar{position:fixed;left:0;right:0;max-width:600px;margin:auto;background:var(--card);border-top:2px solid var(--pb);border-bottom:1px solid var(--border);padding:10px 18px;display:flex;justify-content:space-between;align-items:center;z-index:50;box-shadow:0 -4px 20px rgba(0,0,0,.08)}
@@ -78,7 +86,6 @@ body.dark .txn-card.selected{background:#2a1515;border-color:#7f1d1d}
 /* Delete bar */
 #delBar{position:fixed;left:0;right:0;max-width:600px;margin:auto;background:var(--danger);padding:12px 18px;display:none;align-items:center;justify-content:space-between;z-index:51}
 #delBar.show{display:flex}
-#delBar.show-select{display:flex;background:var(--primary)}
 #delBar span{color:#fff;font-weight:800;font-size:15px}
 #delBar button{background:rgba(255,255,255,.2);border:none;color:#fff;font-weight:800;font-size:14px;padding:8px 16px;border-radius:10px;cursor:pointer;-webkit-user-select:none;user-select:none}
 
@@ -86,7 +93,6 @@ body.dark .txn-card.selected{background:#2a1515;border-color:#7f1d1d}
 .toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
 .toolbar-btn{border:none;border-radius:10px;padding:9px 16px;font-size:14px;font-weight:800;cursor:pointer;background:var(--pl);color:var(--primary);border:1px solid var(--pb);-webkit-user-select:none;user-select:none}
 .toolbar-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-.toolbar-btn.select-active{background:var(--danger);color:#fff;border-color:var(--danger)}
 
 /* Login */
 #loginCard{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80dvh;gap:16px;text-align:center;padding:20px}
@@ -100,6 +106,11 @@ body.dark .txn-card.selected{background:#2a1515;border-color:#7f1d1d}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px;border:none;background:transparent;color:var(--sub);font-size:12px;font-weight:700;cursor:pointer;border-radius:12px;transition:color .3s;-webkit-user-select:none;user-select:none}
 .tab i{font-size:22px}
 .tab.active{color:var(--primary);background:var(--pl)}
+
+/* Setup */
+#setupCard{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:80dvh;gap:16px;text-align:center;padding:20px}
+#setupCard.show{display:flex}
+.setup-input{width:100%;max-width:360px;padding:13px;border-radius:12px;border:1.5px solid var(--pb);font-size:16px;background:var(--pl);color:var(--text);outline:none;text-align:center}
 
 /* Toast */
 #toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f2a44;color:#fff;padding:11px 22px;border-radius:12px;font-size:15px;font-weight:700;z-index:9999;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center}
@@ -122,6 +133,9 @@ body.dark .txn-card.selected{background:#2a1515;border-color:#7f1d1d}
 .toggle-btn{flex:1;padding:12px;border-radius:10px;border:1.5px solid var(--pb);font-weight:800;font-size:15px;cursor:pointer;text-align:center;background:var(--pl);color:var(--sub);transition:all .3s;-webkit-user-select:none;user-select:none}
 .toggle-btn.active-in{background:#ecfdf3;color:var(--success);border-color:var(--success)}
 .toggle-btn.active-out{background:#fef2f2;color:var(--danger);border-color:var(--danger)}
+.ai-section{background:var(--card);border-radius:12px;padding:12px;margin-top:10px;border:1px solid var(--border)}
+.ai-section summary{font-size:14px;font-weight:700;color:var(--sub);cursor:pointer;padding:4px 0}
+.ai-section textarea{width:100%;min-height:60px;padding:10px;border-radius:10px;border:1.5px solid var(--pb);font-size:15px;background:var(--pl);color:var(--text);outline:none;resize:none;font-family:system-ui;margin-top:8px}
 
 /* Long Press Modal */
 #txnModal{position:fixed;inset:0;z-index:3000;display:none;align-items:flex-end;justify-content:center}
@@ -151,33 +165,6 @@ body.dark .txn-card.selected{background:#2a1515;border-color:#7f1d1d}
 .cm-actions button{flex:1;padding:13px;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;-webkit-user-select:none;user-select:none}
 .cm-cancel{background:var(--pl);color:var(--sub)}
 .cm-confirm{background:var(--primary);color:#fff}
-
-/* Sidebar */
-#sidebarOverlay{position:fixed;inset:0;z-index:6000;display:none}
-#sidebarOverlay.show{display:block}
-#sidebarBg{position:absolute;inset:0;background:rgba(0,0,0,.3)}
-#sidebar{position:absolute;top:0;left:0;bottom:0;width:280px;background:var(--card);box-shadow:4px 0 30px rgba(0,0,0,.15);padding:20px;overflow-y:auto;display:flex;flex-direction:column;animation:slideIn .25s ease}
-@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
-.sidebar-header{font-size:18px;font-weight:900;color:var(--text);margin-bottom:20px;display:flex;align-items:center;gap:8px;padding-bottom:14px;border-bottom:1px solid var(--border)}
-.sidebar-item{display:flex;align-items:center;gap:12px;padding:14px 12px;border-radius:12px;cursor:pointer;font-size:15px;font-weight:700;color:var(--text);transition:background .15s}
-.sidebar-item:hover{background:var(--pl)}
-.sidebar-item .icon{font-size:20px;width:28px;text-align:center}
-.sidebar-footer{margin-top:auto;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:var(--sub);text-align:center}
-
-/* File Overlay (bottom sheet) */
-#fileOverlay{position:fixed;inset:0;z-index:5500;display:none;flex-direction:column;justify-content:flex-end}
-#fileOverlay.show{display:flex}
-#fileOverlayBg{position:absolute;inset:0;background:rgba(0,0,0,.3)}
-#fileSheet{position:relative;background:var(--card);border-radius:24px 24px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom));max-width:600px;width:100%;margin:auto;box-shadow:0 -8px 40px rgba(0,0,0,.2)}
-.file-sheet-handle{width:40px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 14px}
-.file-sheet-title{font-size:18px;font-weight:900;color:var(--text);text-align:center;margin-bottom:12px}
-.file-sheet-list{display:flex;flex-direction:column;gap:8px;max-height:55vh;overflow-y:auto}
-.file-card-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;cursor:pointer;border:1.5px solid var(--border);transition:all .15s;background:var(--card)}
-.file-card-item:hover{border-color:var(--primary);background:var(--pl)}
-.file-card-item.active{border-color:var(--primary);background:var(--pl)}
-.file-card-item .check{color:var(--primary);font-size:16px;margin-right:auto}
-.file-card-item .fname{font-weight:700;font-size:15px;color:var(--text);flex:1}
-.file-sheet-close{margin-top:12px;padding:14px;border:none;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;width:100%;background:var(--pl);color:var(--sub)}
 </style>
 </head>
 <body>
@@ -188,41 +175,6 @@ body.dark .txn-card.selected{background:#2a1515;border-color:#7f1d1d}
     <div class="progress-title" id="progressTitle">🔄 جاري المعالجة...</div>
     <div class="progress-status" id="progressStatus">الرجاء الانتظار</div>
     <div class="progress-spinner"></div>
-  </div>
-</div>
-
-<!-- ===== SIDEBAR ===== -->
-<div id="sidebarOverlay">
-  <div id="sidebarBg" onclick="closeSidebar()"></div>
-  <div id="sidebar">
-    <div class="sidebar-header">📊 مساعدي المحاسبي</div>
-    <div class="sidebar-item" onclick="closeSidebar();showCreateModal()">
-      <span class="icon">📁</span> إنشاء ملف جديد
-    </div>
-    <div class="sidebar-item" onclick="closeSidebar();openAppFolder()">
-      <span class="icon">📂</span> فتح مجلد التطبيق
-    </div>
-    <div class="sidebar-item" onclick="closeSidebar();openInDrive()">
-      <span class="icon">📎</span> فتح الملف في Drive
-    </div>
-    <div class="sidebar-item" onclick="closeSidebar();refreshFileList()">
-      <span class="icon">🔄</span> تحديث الملفات
-    </div>
-    <div class="sidebar-item" onclick="closeSidebar();signOut()">
-      <span class="icon">🚪</span> تسجيل الخروج
-    </div>
-    <div class="sidebar-footer">مساعدي المحاسبي v3.6</div>
-  </div>
-</div>
-
-<!-- ===== FILE OVERLAY ===== -->
-<div id="fileOverlay">
-  <div id="fileOverlayBg" onclick="closeFileOverlay()"></div>
-  <div id="fileSheet">
-    <div class="file-sheet-handle"></div>
-    <div class="file-sheet-title">📂 اختيار الملف</div>
-    <div class="file-sheet-list" id="fileSheetList"></div>
-    <button class="file-sheet-close" onclick="closeFileOverlay()">✕ إلغاء</button>
   </div>
 </div>
 
@@ -254,7 +206,7 @@ body.dark .txn-card.selected{background:#2a1515;border-color:#7f1d1d}
     <div id="editForm">
       <input type="text" id="editShop" class="fld" placeholder="الاسم...">
       <div style="display:flex;gap:8px;align-items:center">
-        <input type="text" id="editAmount" class="fld" placeholder="المبلغ..." inputmode="numeric" pattern="[0-9]*" style="flex:1;direction:ltr" oninput="formatAmountInput(this)">
+        <input type="text" id="editAmount" class="fld" placeholder="المبلغ..." inputmode="numeric" pattern="[0-9]*" style="flex:1;direction:ltr">
         <div class="toggle-group" style="flex:0 0 auto">
           <div id="editToggleIn" class="toggle-btn" onclick="setEditType('in')">استلام</div>
           <div id="editToggleOut" class="toggle-btn active-out" onclick="setEditType('out')">صرف</div>
@@ -289,29 +241,46 @@ body.dark .txn-card.selected{background:#2a1515;border-color:#7f1d1d}
       </button>
     </div>
 
+    <!-- Setup Card -->
+    <div id="setupCard">
+      <div style="font-size:40px;margin-bottom:8px">🔑</div>
+      <div class="login-title">مفتاح Gemini API</div>
+      <div class="login-sub">أدخل مفتاح Gemini لتفعيل التحليل بالذكاء الاصطناعي<br>
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--primary);font-size:13px">احصل على مفتاح مجاني</a>
+      </div>
+      <input id="apiKeyInput" class="setup-input" type="password" placeholder="AIza..." style="margin-top:8px">
+      <button class="btn btn-primary" onclick="saveApiKey()" style="max-width:240px">✅ حفظ وابدأ</button>
+      <button class="btn btn-secondary" onclick="skipApiKey()" style="max-width:240px;margin-top:4px;font-size:14px">تخطي (بدون AI)</button>
+    </div>
+
     <!-- Main App -->
     <div id="mainApp" style="display:none">
       <div class="top-bar">
-        <div style="display:flex;align-items:center;gap:8px">
-          <button class="icon-btn" onclick="toggleSidebar()" style="width:40px;height:40px;font-size:18px">☰</button>
-          <h1 style="font-size:19px">📊 مساعدي المحاسبي</h1>
-        </div>
+        <h1>📊 مساعدي المحاسبي</h1>
         <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
-          <button class="icon-btn" id="darkBtn" onclick="toggleDark()" style="width:40px;height:40px">🌙</button>
-          <span class="version">v3.6</span>
+          <button class="icon-btn" id="darkBtn" onclick="toggleDark()">🌙</button>
+          <span class="version">v3.5</span>
         </div>
       </div>
 
       <!-- File Manager -->
       <div id="fileInfoBar" style="display:flex;align-items:center;gap:6px;background:var(--pl);border-radius:12px;padding:9px 13px;margin-bottom:15px;border:1px solid var(--pb);font-size:13px;font-weight:700;color:var(--sub)">
         <span>📁</span>
-        <div id="fileSelector" style="flex:1;cursor:pointer" onclick="openFileOverlay()">
-          <div style="display:flex;align-items:center;gap:5px;padding:2px 0">
+        <div id="fileSelector" style="flex:1;position:relative">
+          <div id="fileSelectorToggle" onclick="toggleFileDropdown()" style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:2px 0">
             <span id="fileNameDisplay" style="font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;color:var(--text)">اختر ملف...</span>
             <span style="font-size:9px;color:var(--sub)">▼</span>
           </div>
+          <div id="fileDropdown" style="display:none;position:absolute;top:100%;right:0;left:0;background:var(--card);border:1px solid var(--pb);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:200;margin-top:4px;overflow:hidden;max-height:260px;overflow-y:auto">
+            <div id="fileListItems"></div>
+            <div style="border-top:1px solid var(--border);padding:11px 13px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700;color:var(--primary)" onclick="showCreateModal()">
+              <span>➕</span> إنشاء ملف جديد
+            </div>
+          </div>
         </div>
+        <span id="folderIndicator" style="font-size:11px;cursor:pointer;color:var(--sub)" onclick="openAppFolder()">📁</span>
         <button class="icon-btn-sm" onclick="refreshFileList()" title="تحديث">🔄</button>
+        <button class="icon-btn-sm" onclick="openInDrive()" title="Drive">📂</button>
         <span id="syncStatus" style="font-size:12px">✅</span>
       </div>
 
@@ -321,8 +290,7 @@ body.dark .txn-card.selected{background:#2a1515;border-color:#7f1d1d}
           <div style="flex:1">
             <div class="fld-label">💰 المبلغ</div>
             <input type="text" id="amountInput" class="fld" placeholder="0" inputmode="numeric" pattern="[0-9]*"
-              style="text-align:center;font-size:28px;font-weight:900;direction:ltr;letter-spacing:1px"
-              oninput="formatAmountInput(this)">
+              style="text-align:center;font-size:28px;font-weight:900;direction:ltr;letter-spacing:1px">
           </div>
           <div style="flex:0 0 auto">
             <div class="fld-label">النوع</div>
@@ -335,6 +303,14 @@ body.dark .txn-card.selected{background:#2a1515;border-color:#7f1d1d}
 
         <div class="fld-label">👤 الاسم</div>
         <input type="text" id="shopInput" class="fld" placeholder="محمود، مكتبة النور..." style="margin-bottom:14px">
+
+        <details class="ai-section">
+          <summary>🤖 تحليل بالذكاء الاصطناعي (احتياطي)</summary>
+          <textarea id="sentenceInput" placeholder="مثال: استلمت 50 دينار من محمود" rows="2"></textarea>
+          <div style="margin-top:8px">
+            <button class="btn btn-secondary" id="analyzeBtn" onclick="analyzeSentence()" style="padding:11px;font-size:14px" disabled>🔍 تحليل</button>
+          </div>
+        </details>
 
         <button class="btn btn-success" onclick="addTransaction()" style="margin-top:12px">➕ إضافة إلى الكشف</button>
       </div>
@@ -350,17 +326,13 @@ body.dark .txn-card.selected{background:#2a1515;border-color:#7f1d1d}
   <div class="container" id="stmtContainer" style="padding-bottom:130px">
     <div class="top-bar">
       <h1>📋 كشف الحساب</h1>
-      <div style="display:flex;gap:6px">
-        <button class="icon-btn" id="selectModeBtn" onclick="toggleSelectMode()" style="font-size:14px;font-weight:800;width:auto;padding:0 14px">تحديد</button>
-        <button class="icon-btn" onclick="loadStatement()" title="تحديث"><i class="bi bi-arrow-clockwise"></i></button>
-      </div>
+      <button class="icon-btn" onclick="loadStatement()" title="تحديث"><i class="bi bi-arrow-clockwise"></i></button>
     </div>
 
     <div class="toolbar">
       <button class="toolbar-btn active" id="filterAll" onclick="setFilter('all')">الكل</button>
       <button class="toolbar-btn" id="filterIn" onclick="setFilter('in')">استلام</button>
       <button class="toolbar-btn" id="filterOut" onclick="setFilter('out')">صرف</button>
-      <button class="toolbar-btn" id="pdfExportBtn" onclick="exportPDF()" style="margin-right:auto">📄 PDF</button>
     </div>
 
     <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap">
@@ -372,7 +344,21 @@ body.dark .txn-card.selected{background:#2a1515;border-color:#7f1d1d}
       <button class="toolbar-btn" onclick="clearDateFilter()">مسح</button>
     </div>
 
-    <div id="cardContainer"></div>
+    <div class="stmt-wrap">
+      <table class="stmt-table" id="stmtTable">
+        <thead>
+          <tr>
+            <th class="sel-col"><input type="checkbox" id="selectAll" class="row-cb" onchange="toggleSelectAll(this)"></th>
+            <th>الاسم</th>
+            <th>المبلغ</th>
+            <th>الرصيد</th>
+          </tr>
+        </thead>
+        <tbody id="stmtBody">
+          <tr><td colspan="4" style="text-align:center;color:var(--sub);padding:30px">حمل من Excel لعرض البيانات</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div class="net-bar" id="netBar" style="display:none">
@@ -395,13 +381,15 @@ body.dark .txn-card.selected{background:#2a1515;border-color:#7f1d1d}
 <script src="https://accounts.google.com/gsi/client"></script>
 <script>
 // ===== CACHE BUSTER =====
-(function(){var V="v3.6";if(localStorage.getItem("_av")!==V){localStorage.setItem("_av",V);location.search="v="+Date.now()}})();
+(function(){var V="v3.5";if(localStorage.getItem("_av")!==V){localStorage.setItem("_av",V);location.search="v="+Date.now()}})();
 // ===== CONFIG =====
 const CLIENT_ID  = "503826285883-45mi9qcd6vldrkbanu6me6fpqg5dghqs.apps.googleusercontent.com";
 const API_KEY    = "AIzaSyDwMM73FaT5snh18bs1WEE1A5pnXlGaD1M";
 const SCOPES     = "https://www.googleapis.com/auth/drive.file";
 const TOKEN_KEY  = "acc_token";
+const GEMINI_API = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
 const APP_FOLDER_NAME = "مساعدي المحاسبي";
+const GEMINI_TIMEOUT = 15000;
 
 // ===== STATE =====
 let tokenClient, accessToken=null;
@@ -411,7 +399,6 @@ let activeId=null, editType="out";
 let selectedIds=new Set();
 let syncLock=false;
 let syncTimer=null;
-let selectMode=false;
 
 // ===== DARK MODE =====
 (function initDark(){
@@ -469,12 +456,20 @@ function initGapi(){
 
 function onAuthReady(){
   document.getElementById("loginCard").style.display="none";
+  const apiKey=localStorage.getItem("gemini_api_key");
+  if(!apiKey||apiKey===""){
+    document.getElementById("setupCard").classList.add("show");
+    document.getElementById("mainApp").style.display="none";
+    return;
+  }
+  document.getElementById("setupCard").classList.remove("show");
   document.getElementById("mainApp").style.display="block";
   ensureAppFolder().then(()=>{ loadFileList(); loadRecentTransactions(); if(currentFileId) syncFromDrive(); });
 }
 function showLogin(){
   document.getElementById("loginCard").style.display="flex";
   document.getElementById("mainApp").style.display="none";
+  document.getElementById("setupCard").classList.remove("show");
 }
 function signIn(){
   if(!tokenClient){ showToast("جاري التهيئة..."); setTimeout(signIn,1000); return; }
@@ -482,21 +477,30 @@ function signIn(){
 }
 window.signIn=signIn;
 
-function signOut(){
-  localStorage.removeItem(TOKEN_KEY);
-  if(google?.accounts?.oauth2) google.accounts.oauth2.revoke(accessToken,"");
-  accessToken=null; gapi.client.setToken(null);
-  showLogin(); showToast("تم تسجيل الخروج");
+function saveApiKey(){
+  const key=document.getElementById("apiKeyInput").value.trim();
+  if(!key){ showToast("ادخل مفتاح API"); return; }
+  localStorage.setItem("gemini_api_key",key);
+  document.getElementById("setupCard").classList.remove("show");
+  document.getElementById("mainApp").style.display="block";
+  ensureAppFolder().then(()=>{ loadFileList(); loadRecentTransactions(); });
+  showToast("✅ تم حفظ مفتاح Gemini");
 }
-window.signOut=signOut;
+window.saveApiKey=saveApiKey;
 
-// ===== SIDEBAR =====
-function toggleSidebar(){ document.getElementById("sidebarOverlay").classList.toggle("show"); }
-function closeSidebar(){ document.getElementById("sidebarOverlay").classList.remove("show"); }
-window.toggleSidebar=toggleSidebar; window.closeSidebar=closeSidebar;
+function skipApiKey(){
+  localStorage.setItem("gemini_api_key","skip");
+  document.getElementById("setupCard").classList.remove("show");
+  document.getElementById("mainApp").style.display="block";
+  loadRecentTransactions();
+  ensureAppFolder().then(()=>{ loadFileList(); syncFromDrive(); });
+  showToast("وضع التحليل الأساسي - AI غير متاح");
+}
+window.skipApiKey=skipApiKey;
 
 // ===== CREATE FILE MODAL =====
 function showCreateModal(){
+  closeFileDropdown();
   document.getElementById("createFileInput").value="";
   document.getElementById("createModal").classList.add("show");
   setTimeout(()=>document.getElementById("createFileInput").focus(),200);
@@ -549,7 +553,7 @@ function folderQ(){ return appFolderId?`mimeType='application/vnd.openxmlformats
 
 async function ensureAppFolder(){
   const saved=localStorage.getItem("appFolderId");
-  if(saved){ appFolderId=saved; return; }
+  if(saved){ appFolderId=saved; updateFolderIndicator(); return; }
   try{
     const res=await gapi.client.drive.files.list({q:`name='${APP_FOLDER_NAME}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,fields:"files(id,name)",pageSize:5});
     const folders=res.result.files||[];
@@ -559,9 +563,13 @@ async function ensureAppFolder(){
       const folder=await mr.json(); appFolderId=folder.id;
     }
     localStorage.setItem("appFolderId",appFolderId);
+    updateFolderIndicator();
   } catch(e){ showToast("فشل إعداد مجلد التطبيق"); console.error("ensureAppFolder:",e); }
 }
-
+function updateFolderIndicator(){
+  const el=document.getElementById("folderIndicator");
+  if(el) el.textContent=appFolderId?`📁 ${APP_FOLDER_NAME}`:"📁";
+}
 function openAppFolder(){ if(appFolderId) window.open(`https://drive.google.com/drive/folders/${appFolderId}`,"_blank"); }
 window.openAppFolder=openAppFolder;
 
@@ -569,16 +577,16 @@ function loadFileList(){
   const saved=getFileList(); const defaultId=localStorage.getItem("defaultFileId");
   if(saved.length&&defaultId){
     const f=saved.find(x=>x.id===defaultId);
-    if(f){ currentFileId=f.id; currentFileName=f.name; buildFileOverlay(); loadRecentTransactions(); return; }
+    if(f){ currentFileId=f.id; currentFileName=f.name; buildFileDropdown(); loadRecentTransactions(); return; }
   }
-  if(saved.length){ currentFileId=saved[0].id; currentFileName=saved[0].name; localStorage.setItem("defaultFileId",currentFileId); buildFileOverlay(); loadRecentTransactions(); return; }
+  if(saved.length){ currentFileId=saved[0].id; currentFileName=saved[0].name; localStorage.setItem("defaultFileId",currentFileId); buildFileDropdown(); loadRecentTransactions(); return; }
   findExcelFiles();
 }
 async function findExcelFiles(){
   try{
     const res=await gapi.client.drive.files.list({q:folderQ(),fields:"files(id,name)",pageSize:50});
     const files=res.result.files||[];
-    if(files.length){ myFiles=files.map(f=>({id:f.id,name:f.name})); saveFileList(myFiles); if(!currentFileId){ currentFileId=myFiles[0].id; currentFileName=myFiles[0].name; localStorage.setItem("defaultFileId",currentFileId); } buildFileOverlay(); loadRecentTransactions(); if(currentFileId) syncFromDrive(); }
+    if(files.length){ myFiles=files.map(f=>({id:f.id,name:f.name})); saveFileList(myFiles); if(!currentFileId){ currentFileId=myFiles[0].id; currentFileName=myFiles[0].name; localStorage.setItem("defaultFileId",currentFileId); } buildFileDropdown(); loadRecentTransactions(); if(currentFileId) syncFromDrive(); }
     else document.getElementById("fileNameDisplay").textContent="ماكو ملفات";
   } catch(e){ showToast("خطأ بالبحث عن الملفات"); console.error("findExcelFiles:",e); }
 }
@@ -590,46 +598,26 @@ async function refreshFileList(){
     for(const f of myFiles){ if(!seen.has(f.id)){ merged.push(f); seen.add(f.id); } }
     myFiles=merged; saveFileList(myFiles);
     if(!currentFileId&&myFiles.length){ currentFileId=myFiles[0].id; currentFileName=myFiles[0].name; localStorage.setItem("defaultFileId",currentFileId); }
-    buildFileOverlay(); showToast("✅ تم تحديث القائمة");
+    buildFileDropdown(); showToast("✅ تم تحديث القائمة");
   } catch(e){ showToast("فشل تحديث القائمة"); console.error("refreshFileList:",e); }
 }
-function buildFileOverlay(){
+function buildFileDropdown(){
   document.getElementById("fileNameDisplay").textContent=currentFileName||"اختر ملف...";
-  document.getElementById("fileSheetList").innerHTML=myFiles.map(f=>
-    `<div class="file-card-item${f.id===currentFileId?" active":""}" onclick="switchFile('${f.id}','${esc(f.name)}')">
-      <span style="font-size:20px">📄</span>
-      <span class="fname">${esc(f.name)}</span>
-      ${f.id===currentFileId?'<span class="check">✓</span>':''}
-    </div>`
+  document.getElementById("fileListItems").innerHTML=myFiles.map(f=>
+    `<div class="file-item${f.id===currentFileId?" active":""}" onclick="switchFile('${f.id}','${esc(f.name)}')">📄 ${esc(f.name)}<span class="check">✓</span></div>`
   ).join("");
 }
-function switchFile(id,name){
-  currentFileId=id; currentFileName=name;
-  localStorage.setItem("defaultFileId",id);
-  buildFileOverlay(); closeFileOverlay();
-  loadRecentTransactions();
-  selectedIds.clear(); updateDelBar();
-  transactions=getTxns(currentFileId);
-  applyFilter();
-  setSyncStatus("✅","var(--success)");
-  showToast(`📁 ${name}`);
-}
-function openFileOverlay(){ document.getElementById("fileOverlay").classList.add("show"); }
-function closeFileOverlay(){ document.getElementById("fileOverlay").classList.remove("show"); }
-window.switchFile=switchFile; window.openFileOverlay=openFileOverlay; window.closeFileOverlay=closeFileOverlay; window.refreshFileList=refreshFileList;
+function switchFile(id,name){ currentFileId=id; currentFileName=name; localStorage.setItem("defaultFileId",id); buildFileDropdown(); closeFileDropdown(); loadRecentTransactions(); setSyncStatus("✅","var(--success)"); showToast(`📁 ${name}`); }
+function toggleFileDropdown(){ const dd=document.getElementById("fileDropdown"); dd.style.display=dd.style.display==="block"?"none":"block"; }
+function closeFileDropdown(){ document.getElementById("fileDropdown").style.display="none"; }
+document.addEventListener("click",e=>{ if(!e.target.closest("#fileSelector")) closeFileDropdown(); });
+window.switchFile=switchFile; window.toggleFileDropdown=toggleFileDropdown; window.refreshFileList=refreshFileList;
 
 function openInDrive(){ if(!currentFileId){ showToast("ماكو ملف مختار"); return; } window.open(`https://drive.google.com/file/d/${currentFileId}/view`,"_blank"); }
 window.openInDrive=openInDrive;
 
 function getDateStr(){ const d=new Date(); return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`; }
 function getTimeStr(){ const d=new Date(); return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; }
-
-// ===== FORMAT AMOUNT =====
-function formatAmountInput(el){
-  let v=el.value.replace(/[^0-9]/g,"");
-  if(v) v=parseInt(v,10).toLocaleString();
-  el.value=v;
-}
 
 // ===== FORM =====
 function setType(t){
@@ -642,6 +630,7 @@ window.setType=setType;
 function resetForm(){
   document.getElementById("amountInput").value="";
   document.getElementById("shopInput").value="";
+  document.getElementById("sentenceInput").value="";
 }
 
 function fillFormFromData(data){
@@ -678,6 +667,52 @@ window.addTransaction=addTransaction;
 function debounceSync(){
   if(syncTimer) clearTimeout(syncTimer);
   syncTimer=setTimeout(()=>{ syncTimer=null; syncToDrive(); },2000);
+}
+
+// ===== AI =====
+async function analyzeSentence(){
+  const text=document.getElementById("sentenceInput").value.trim();
+  if(!text){ showToast("اكتب الجملة أولاً"); return; }
+  const apiKey=localStorage.getItem("gemini_api_key");
+  const btn=document.getElementById("analyzeBtn");
+  if(!apiKey||apiKey==="skip"||apiKey.length<10){ showToast("أدخل مفتاح Gemini أولاً"); return; }
+  btn.disabled=true; btn.textContent="جاري...";
+  const controller=new AbortController();
+  const timeoutId=setTimeout(()=>controller.abort(),GEMINI_TIMEOUT);
+  try{
+    const prompt=`أنت مساعد محاسبي. حلل الجملة وأعد JSON فقط بدون markdown:
+{"amount":<رقم>,"type":"in/out","shop":"الاسم"}
+الجملة: "${text}"`;
+    const res=await fetch(`${GEMINI_API}?key=${apiKey}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.1,maxOutputTokens:150}}),signal:controller.signal});
+    clearTimeout(timeoutId);
+    const result=await res.json();
+    const content=result?.candidates?.[0]?.content?.parts?.[0]?.text||"";
+    const cleaned=content.replace(/```json\n?/g,"").replace(/```\n?/g,"").trim();
+    const s=cleaned.indexOf('{'); const e=cleaned.lastIndexOf('}');
+    if(s===-1||e===-1) throw new Error("no json");
+    const data=JSON.parse(cleaned.substring(s,e+1));
+    fillFormFromData(data);
+    showToast(`✅ تم التحليل - ${fmtNum(data.amount)} د.ع`);
+  } catch(err){
+    if(err.name==="AbortError") showToast("❌ انتهت مهلة الطلب");
+    else { const data=localAnalyze(text); fillFormFromData(data); showToast("AI ما استجاب، تحليل أساسي"); }
+  }
+  clearTimeout(timeoutId);
+  btn.disabled=false; btn.textContent="🔍 تحليل";
+}
+window.analyzeSentence=analyzeSentence;
+
+function localAnalyze(text){
+  const r={amount:0,type:"out",shop:""};
+  const inW=["استلمت","قبضت","وصلني","تحويل","إيداع","استلام","قبض","وارد"];
+  const outW=["صرفت","دفعت","شراء","خصم","دفع","صرف","منصرف","مصروف"];
+  for(const w of inW){ if(text.includes(w)){ r.type="in"; break; } }
+  for(const w of outW){ if(text.includes(w)){ r.type="out"; break; } }
+  const nums=text.match(/\d[\d,]*\d|\d+/g);
+  if(nums) r.amount=parseInt(nums[0].replace(/,/g,""),10);
+  const sm=text.match(/من\s+(\S+)/)||text.match(/لـ\s+(\S+)/);
+  if(sm) r.shop=sm[1];
+  return r;
 }
 
 // ===== SYNC STATUS =====
@@ -772,10 +807,8 @@ window.loadRecentTransactions=loadRecentTransactions;
 function loadStatement(){
   transactions=getTxns(currentFileId);
   selectedIds.clear(); updateDelBar();
-  if(document.getElementById("pageStatement").classList.contains("active")||transactions.length>0){
-    applyFilter();
-    switchTab("statement");
-  }
+  applyFilter();
+  switchTab("statement");
   if(currentFileId&&accessToken) syncFromDrive();
 }
 window.loadStatement=loadStatement;
@@ -820,9 +853,9 @@ function clearDateFilter(){ document.getElementById("dateFrom").value=""; docume
 window.clearDateFilter=clearDateFilter;
 
 function renderStatement(rows){
-  const container=document.getElementById("cardContainer");
+  const tbody=document.getElementById("stmtBody");
   if(!rows.length){
-    container.innerHTML='<div class="empty-state">لا توجد معاملات</div>';
+    tbody.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--sub);padding:24px">لا توجد معاملات</td></tr>';
     return;
   }
   const sorted=[...rows].sort((a,b)=>{
@@ -832,21 +865,21 @@ function renderStatement(rows){
     if(diff!==0) return diff;
     return (a.time||"").localeCompare(b.time||"");
   });
-  container.innerHTML=sorted.map(t=>{
+  let balance=0;
+  tbody.innerHTML=sorted.map(t=>{
     const isIn=t.amount>0; const sign=isIn?"+":"-";
-    const amtCls=isIn?"pos":"neg"; const typeCls=isIn?"in":"out";
+    balance+=t.amount;
+    const amtCls=isIn?"pos":"neg";
+    const balCls=balance>=0?"pos":"neg";
     const sel=selectedIds.has(t._id);
-    return `<div class="txn-card ${typeCls}${sel?" selected":""}" data-id="${esc(t._id||"")}"
-      onclick="${selectMode?'selectCard(event)':''}"
+    return `<tr class="${sel?"selected":""}" data-id="${esc(t._id||"")}"
       oncontextmenu="rowContextMenu(event,'${esc(t._id||"")}');return false;"
       ontouchstart="startLP(event,'${esc(t._id||"")}')" ontouchend="cancelLP()" ontouchmove="cancelLP()">
-      <div class="txn-card-top">
-        ${selectMode?`<input type="checkbox" class="card-cb show" ${sel?"checked":""} onchange="toggleRowSel('${esc(t._id||"")}',this)">`:''}
-        <div class="txn-card-name">${esc(t.shop||"—")}</div>
-        <div class="txn-card-amt ${amtCls}">${sign}${fmtNum(t.amount)}</div>
-      </div>
-      <div class="txn-card-date">${esc(t.date||"")}${t.time?" \u2014 "+esc(t.time):""}</div>
-    </div>`;
+      <td class="td-sel"><input type="checkbox" class="row-cb" ${sel?"checked":""} onchange="toggleRowSel('${esc(t._id||"")}',this)"></td>
+      <td class="td-name">${esc(t.shop||"—")}</td>
+      <td class="td-amt ${amtCls}">${sign}${fmtNum(t.amount)}</td>
+      <td class="td-bal ${balCls}">${fmtNum(balance)}</td>
+    </tr>`;
   }).join("");
   requestAnimationFrame(()=>{
     const pg=document.getElementById("pageStatement");
@@ -871,58 +904,29 @@ function positionNetBar(){
   document.getElementById("netBar").style.bottom=(tabH+delH)+"px";
 }
 
-// ===== SELECT MODE =====
-function toggleSelectMode(){
-  selectMode=!selectMode;
-  const btn=document.getElementById("selectModeBtn");
-  if(selectMode){
-    btn.textContent="✕ إنهاء";
-    btn.classList.add("select-active");
-    selectedIds.clear();
-    cancelSelection();
-    applyFilter();
-    document.getElementById("delBar").classList.add("show-select");
-    document.getElementById("delBarCount").textContent="0 محدد";
-  } else {
-    btn.textContent="تحديد";
-    btn.classList.remove("select-active");
-    selectedIds.clear();
-    cancelSelection();
-    applyFilter();
-    document.getElementById("delBar").classList.remove("show-select");
-  }
-}
-window.toggleSelectMode=toggleSelectMode;
-
-function selectCard(e){
-  if(!selectMode) return;
-  const card=e.currentTarget;
-  const id=card.getAttribute("data-id");
-  const cb=card.querySelector(".card-cb");
-  if(cb){ cb.checked=!cb.checked; toggleRowSel(id,cb); }
-}
-
 // ===== SELECTION =====
 function toggleSelectAll(cb){
-  document.querySelectorAll("#cardContainer .txn-card[data-id]").forEach(card=>{
-    const id=card.getAttribute("data-id");
+  const rows=document.querySelectorAll("#stmtBody tr[data-id]");
+  rows.forEach(r=>{
+    const id=r.getAttribute("data-id");
     if(cb.checked) selectedIds.add(id);
     else selectedIds.delete(id);
-    card.classList.toggle("selected",cb.checked);
-    const ccb=card.querySelector(".card-cb");
-    if(ccb) ccb.checked=cb.checked;
+    r.classList.toggle("selected",cb.checked);
+    const rcb=r.querySelector(".row-cb");
+    if(rcb) rcb.checked=cb.checked;
   });
   updateDelBar();
 }
+window.toggleSelectAll=toggleSelectAll;
 
 function toggleRowSel(id,cb){
   if(cb.checked) selectedIds.add(id);
   else selectedIds.delete(id);
-  const card=document.querySelector(`#cardContainer .txn-card[data-id="${CSS.escape(id)}"]`);
-  if(card) card.classList.toggle("selected",cb.checked);
-  const allCards=document.querySelectorAll("#cardContainer .txn-card[data-id]");
+  const row=document.querySelector(`#stmtBody tr[data-id="${CSS.escape(id)}"]`);
+  if(row) row.classList.toggle("selected",cb.checked);
   const allCb=document.getElementById("selectAll");
-  if(allCb) allCb.checked=allCards.length>0&&selectedIds.size===allCards.length;
+  const allRows=document.querySelectorAll("#stmtBody tr[data-id]");
+  allCb.checked=allRows.length>0&&selectedIds.size===allRows.length;
   updateDelBar();
 }
 window.toggleRowSel=toggleRowSel;
@@ -940,10 +944,11 @@ function updateDelBar(){
 
 function cancelSelection(){
   selectedIds.clear();
-  document.querySelectorAll("#cardContainer .txn-card[data-id]").forEach(card=>{
-    card.classList.remove("selected");
-    const cb=card.querySelector(".card-cb"); if(cb) cb.checked=false;
+  document.querySelectorAll("#stmtBody tr[data-id]").forEach(r=>{
+    r.classList.remove("selected");
+    const cb=r.querySelector(".row-cb"); if(cb) cb.checked=false;
   });
+  document.getElementById("selectAll").checked=false;
   updateDelBar();
 }
 window.cancelSelection=cancelSelection;
@@ -954,6 +959,7 @@ function deleteSelected(){
   const txns=getTxns(currentFileId).filter(t=>!selectedIds.has(t._id));
   saveTxns(currentFileId,txns);
   selectedIds.clear();
+  document.getElementById("selectAll").checked=false;
   updateDelBar();
   loadRecentTransactions();
   transactions=getTxns(currentFileId);
@@ -962,81 +968,6 @@ function deleteSelected(){
   showToast("🗑 تم الحذف");
 }
 window.deleteSelected=deleteSelected;
-
-// ===== PDF EXPORT =====
-function exportPDF(){
-  const from=document.getElementById("dateFrom").value;
-  const to=document.getElementById("dateTo").value;
-  let f=transactions;
-  if(from||to){
-    const fromDate=from?new Date(from):null;
-    const toDate=to?new Date(to):null;
-    if(toDate) toDate.setHours(23,59,59);
-    f=transactions.filter(t=>{
-      const pts=t.date.split("/"); if(pts.length!==3) return true;
-      const td=new Date(`${pts[2]}-${pts[1]}-${pts[0]}`);
-      if(fromDate&&td<fromDate) return false;
-      if(toDate&&td>toDate) return false;
-      return true;
-    });
-  }
-  if(!f.length){ showToast("لا توجد معاملات للتصدير"); return; }
-
-  const sorted=[...f].sort((a,b)=>{
-    const da=a.date.split("/"); const db=b.date.split("/");
-    if(da.length!==3||db.length!==3) return 0;
-    const diff=new Date(da[2],da[1]-1,da[0])-new Date(db[2],db[1]-1,db[0]);
-    if(diff!==0) return diff;
-    return (a.time||"").localeCompare(b.time||"");
-  });
-
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF({unit:"mm",format:"a4"});
-  doc.setFont("helvetica","bold");
-  doc.setFontSize(16);
-  doc.text("كشف حساب - مساعدي المحاسبي",105,15,{align:"center"});
-  doc.setFontSize(10);
-  doc.setFont("helvetica","normal");
-  const filterText=from||to?` (من ${from||"---"} إلى ${to||"---"})`:"";
-  doc.text(`تاريخ التقرير: ${getDateStr()}${filterText}`,105,22,{align:"center"});
-
-  const rows=[];
-  let balance=0;
-  for(const t of sorted){
-    balance+=t.amount;
-    const sign=t.amount>0?"+":"-";
-    rows.push([
-      t.shop||"—",
-      sign+Math.abs(t.amount).toLocaleString(),
-      t.date||"",
-      (balance>=0?"+":"-")+Math.abs(balance).toLocaleString()
-    ]);
-  }
-
-  const net=sorted.reduce((s,t)=>s+t.amount,0);
-  doc.autoTable({
-    head:[["الاسم","المبلغ","التاريخ","الرصيد"]],
-    body:rows,
-    startY:28,
-    styles:{fontSize:9,cellPadding:3,halign:"right"},
-    headStyles:{fillColor:[13,110,253],fontSize:10,fontStyle:"bold",halign:"right"},
-    columnStyles:{0:{cellWidth:55},1:{cellWidth:35,halign:"left"},2:{cellWidth:30},3:{cellWidth:35,halign:"left"}},
-    tableLineColor:[200,200,200],
-    tableLineWidth:0.1
-  });
-
-  const finalY=doc.lastAutoTable.finalY||50;
-  doc.setFont("helvetica","bold");
-  doc.setFontSize(12);
-  const netText="الصافي: "+(net>=0?"+":"-")+Math.abs(net).toLocaleString()+" د.ع";
-  doc.setTextColor(net>=0?22:220);
-  doc.text(netText,105,finalY+10,{align:"center"});
-
-  const fileName=`كشف_حساب_${getDateStr().replace(/\//g,"-")}.pdf`;
-  doc.save(fileName);
-  showToast("✅ تم تصدير PDF");
-}
-window.exportPDF=exportPDF;
 
 // ===== LONG PRESS =====
 let lpTimer=null;
@@ -1134,6 +1065,7 @@ function fmtNum(n){ if(n==null||isNaN(n)) return "0"; return Math.abs(n).toStrin
 function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/'/g,"&#39;").replace(/"/g,"&quot;"); }
 
 // ===== INIT =====
+document.getElementById("sentenceInput").addEventListener("input",function(){ document.getElementById("analyzeBtn").disabled=!this.value.trim(); });
 window.onload=initGapi;
 if("serviceWorker"in navigator) navigator.serviceWorker.register("sw.js?v="+Date.now());
 </script>
