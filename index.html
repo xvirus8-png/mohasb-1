@@ -798,29 +798,22 @@ function localAnalyze(text){
 // ===== SYNC STATUS =====
 function setSyncStatus(t,c){ const el=document.getElementById("syncStatus"); if(el){ el.textContent=t; el.style.color=c||"var(--sub)"; } }
 
-// ===== SYNC TO DRIVE (with mutex) =====
+// ===== SYNC TO DRIVE (rebuilds entire Excel from local data) =====
 async function syncToDrive(){
   if(!currentFileId){ setSyncStatus("⚠️","var(--danger)"); return; }
   if(syncLock){ setSyncStatus("🔄","#0d6efd"); return; }
   syncLock=true;
   setSyncStatus("🔄","#0d6efd");
   try{
-    const dlRes=await fetch(`https://www.googleapis.com/drive/v3/files/${currentFileId}?alt=media`,{headers:{"Authorization":"Bearer "+accessToken}});
-    let wb,ws,existingIds=new Set();
-    if(dlRes.ok){
-      const buf=await dlRes.arrayBuffer(); wb=XLSX.read(buf,{type:"array"}); ws=wb.Sheets[wb.SheetNames[0]];
-      const rows=XLSX.utils.sheet_to_json(ws,{header:1});
-      for(let i=1;i<rows.length;i++){ if(rows[i]&&rows[i][4]) existingIds.add(String(rows[i][4])); }
-    } else {
-      wb=XLSX.utils.book_new(); ws=XLSX.utils.aoa_to_sheet([["التاريخ","الوقت","اسم المحل","المبلغ","_id"]]); ws['!cols']=[{wch:12},{wch:8},{wch:20},{wch:12},{wch:0}]; XLSX.utils.book_append_sheet(wb,ws,"كشف حساب");
-    }
     const localTxns=getTxns(currentFileId);
-    const newRows=[];
-    for(const t of localTxns){ if(!existingIds.has(t._id)) newRows.push([t.date,t.time||"",t.shop||"",String(t.amount||"0"),t._id||""]); }
-    if(!newRows.length){ setSyncStatus("✅","var(--success)"); syncLock=false; return; }
-    const ref=XLSX.utils.decode_range(ws["!ref"]||"A1:E1");
-    for(let i=0;i<newRows.length;i++){ const row=ref.e.r+1+i; for(let c=0;c<newRows[i].length;c++){ ws[XLSX.utils.encode_cell({r:row,c})]={t:"s",v:newRows[i][c]}; } }
-    ws["!ref"]=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:ref.e.r+newRows.length,c:4}});
+    const dataRows=[["التاريخ","الوقت","اسم المحل","المبلغ","_id"]];
+    for(const t of localTxns){
+      dataRows.push([t.date,t.time||"",t.shop||"",String(t.amount||"0"),t._id||""]);
+    }
+    const wb=XLSX.utils.book_new();
+    const ws=XLSX.utils.aoa_to_sheet(dataRows);
+    ws['!cols']=[{wch:12},{wch:8},{wch:20},{wch:12},{wch:0}];
+    XLSX.utils.book_append_sheet(wb,ws,"كشف حساب");
     const outWb=XLSX.write(wb,{type:"array",bookType:"xlsx"});
     const outBlob=new Blob([outWb],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
     const form=new FormData();
@@ -1127,6 +1120,7 @@ function deleteSingleTxn(){
   loadRecentTransactions();
   transactions=getTxns(currentFileId);
   applyFilter();
+  syncToDrive();
   showToast("🗑 تم الحذف");
 }
 window.deleteSingleTxn=deleteSingleTxn;
