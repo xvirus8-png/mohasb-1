@@ -833,9 +833,9 @@ function renderStatement(rows){
   const sorted=[...rows].sort((a,b)=>{
     const da=a.date.split("/"); const db=b.date.split("/");
     if(da.length!==3||db.length!==3) return 0;
-    const diff=new Date(da[2],da[1]-1,da[0])-new Date(db[2],db[1]-1,db[0]);
+    const diff=new Date(db[2],db[1]-1,db[0])-new Date(da[2],da[1]-1,da[0]);
     if(diff!==0) return diff;
-    return (a.time||"").localeCompare(b.time||"");
+    return (b.time||"").localeCompare(a.time||"");
   });
   container.innerHTML=sorted.map(t=>{
     const isIn=t.amount>0; const sign=isIn?"+":"-";
@@ -855,7 +855,7 @@ function renderStatement(rows){
   }).join("");
   requestAnimationFrame(()=>{
     const pg=document.getElementById("pageStatement");
-    pg.scrollTop=pg.scrollHeight;
+    pg.scrollTop=0;
   });
 }
 
@@ -990,9 +990,9 @@ function exportPDF(){
   const sorted=[...f].sort((a,b)=>{
     const da=a.date.split("/"), db=b.date.split("/");
     if(da.length!==3||db.length!==3) return 0;
-    const diff=new Date(da[2],da[1]-1,da[0])-new Date(db[2],db[1]-1,db[0]);
+    const diff=new Date(db[2],db[1]-1,db[0])-new Date(da[2],da[1]-1,da[0]);
     if(diff!==0) return diff;
-    return (a.time||"").localeCompare(b.time||"");
+    return (b.time||"").localeCompare(a.time||"");
   });
 
   const {jsPDF}=window.jspdf;
