@@ -626,9 +626,14 @@ function getTimeStr(){ const d=new Date(); return `${String(d.getHours()).padSta
 
 // ===== FORMAT AMOUNT =====
 function formatAmountInput(el){
+  const start=el.selectionStart;
+  const digitsBefore=el.value.slice(0,start).replace(/[^0-9]/g,"").length;
   let v=el.value.replace(/[^0-9]/g,"");
   if(v) v=parseInt(v,10).toLocaleString();
-  el.value=v;
+  el.value=v||"";
+  let newPos=0;
+  for(let i=0,dc=0;i<el.value.length;i++){ if(/\d/.test(el.value[i])){ dc++; if(dc>digitsBefore) break; } newPos=i+1; }
+  el.setSelectionRange(newPos,newPos);
 }
 
 // ===== FORM =====
