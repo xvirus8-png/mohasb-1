@@ -675,6 +675,8 @@ function addTransaction(){
   showToast(`✅ ${fmtNum(amount)} د.ع - ${currentType==="in"?"استلام":"صرف"}`);
   resetForm();
   loadRecentTransactions();
+  transactions=getTxns(currentFileId);
+  applyFilter();
   debounceSync();
 }
 window.addTransaction=addTransaction;
