@@ -615,7 +615,7 @@ function switchFile(id,name){
   setSyncStatus("✅","var(--success)");
   showToast(`📁 ${name}`);
 }
-function openFileOverlay(){ document.getElementById("fileOverlay").classList.add("show"); }
+function openFileOverlay(){ refreshFileList(); document.getElementById("fileOverlay").classList.add("show"); }
 function closeFileOverlay(){ document.getElementById("fileOverlay").classList.remove("show"); }
 window.switchFile=switchFile; window.openFileOverlay=openFileOverlay; window.closeFileOverlay=closeFileOverlay; window.refreshFileList=refreshFileList;
 
