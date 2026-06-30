@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#f5f7fa;--card:#fff;--shadow:0 8px 25px rgba(0,0,0,.06);--text:#1f2a44;--sub:#6e7b96;--border:#edf2ff;--primary:#0d6efd;--pl:#eef4ff;--pb:#dbe4ff;--bottom:rgba(255,255,255,.88);--success:#16a34a;--danger:#dc2626}
@@ -983,7 +983,7 @@ function exportPDF(){
   if(!f.length){ showToast("لا توجد معاملات للتصدير"); return; }
 
   const sorted=[...f].sort((a,b)=>{
-    const da=a.date.split("/"); const db=b.date.split("/");
+    const da=a.date.split("/"), db=b.date.split("/");
     if(da.length!==3||db.length!==3) return 0;
     const diff=new Date(da[2],da[1]-1,da[0])-new Date(db[2],db[1]-1,db[0]);
     if(diff!==0) return diff;
@@ -992,49 +992,70 @@ function exportPDF(){
 
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({unit:"mm",format:"a4"});
-  doc.setFont("helvetica","bold");
-  doc.setFontSize(16);
-  doc.text("كشف حساب - مساعدي المحاسبي",105,15,{align:"center"});
-  doc.setFontSize(10);
-  doc.setFont("helvetica","normal");
-  const filterText=from||to?` (من ${from||"---"} إلى ${to||"---"})`:"";
-  doc.text(`تاريخ التقرير: ${getDateStr()}${filterText}`,105,22,{align:"center"});
 
-  const rows=[];
   let balance=0;
-  for(const t of sorted){
+  const rowsHtml=sorted.map(t=>{
     balance+=t.amount;
     const sign=t.amount>0?"+":"-";
-    rows.push([
-      t.shop||"—",
-      sign+Math.abs(t.amount).toLocaleString(),
-      t.date||"",
-      (balance>=0?"+":"-")+Math.abs(balance).toLocaleString()
-    ]);
-  }
+    const amt=sign+Math.abs(t.amount).toLocaleString();
+    const bal=(balance>=0?"+":"-")+Math.abs(balance).toLocaleString();
+    const amtColor=t.amount>0?"#16a34a":"#dc2626";
+    const balColor=balance>=0?"#16a34a":"#dc2626";
+    return `<tr>
+      <td style="padding:5px 6px;border-bottom:1px solid #ddd;text-align:right;font-weight:600">${esc(t.shop||"—")}</td>
+      <td style="padding:5px 6px;border-bottom:1px solid #ddd;text-align:left;direction:ltr;font-weight:700;color:${amtColor}">${amt}</td>
+      <td style="padding:5px 6px;border-bottom:1px solid #ddd;text-align:center;font-size:11px;color:#666">${esc(t.date||"")}</td>
+      <td style="padding:5px 6px;border-bottom:1px solid #ddd;text-align:left;direction:ltr;font-weight:700;color:${balColor}">${bal}</td>
+    </tr>`;
+  }).join("");
 
+  const filterText=from||to?` (من ${from||"---"} إلى ${to||"---"})`:"";
   const net=sorted.reduce((s,t)=>s+t.amount,0);
-  doc.autoTable({
-    head:[["الاسم","المبلغ","التاريخ","الرصيد"]],
-    body:rows,
-    startY:28,
-    styles:{fontSize:9,cellPadding:3,halign:"right"},
-    headStyles:{fillColor:[13,110,253],fontSize:10,fontStyle:"bold",halign:"right"},
-    columnStyles:{0:{cellWidth:55},1:{cellWidth:35,halign:"left"},2:{cellWidth:30},3:{cellWidth:35,halign:"left"}},
-    tableLineColor:[200,200,200],
-    tableLineWidth:0.1
-  });
-
-  const finalY=doc.lastAutoTable.finalY||50;
-  doc.setFont("helvetica","bold");
-  doc.setFontSize(12);
-  const netText="الصافي: "+(net>=0?"+":"-")+Math.abs(net).toLocaleString()+" د.ع";
-  doc.setTextColor(net>=0?22:220);
-  doc.text(netText,105,finalY+10,{align:"center"});
-
+  const netColor=net>=0?"#16a34a":"#dc2626";
+  const netSign=net>=0?"+":"-";
   const fileName=`كشف_حساب_${getDateStr().replace(/\//g,"-")}.pdf`;
-  doc.save(fileName);
-  showToast("✅ تم تصدير PDF");
+
+  const html=`<div style="direction:rtl;font-family:system-ui,'Segoe UI',sans-serif;padding:8px;width:190mm;background:#fff">
+    <h2 style="text-align:center;margin:0 0 2px;font-size:18px;color:#1f2a44">كشف حساب - مساعدي المحاسبي</h2>
+    <p style="text-align:center;margin:0 0 12px;font-size:11px;color:#6e7b96">تاريخ التقرير: ${esc(getDateStr())}${filterText}</p>
+    <table dir="rtl" style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead>
+        <tr style="background:#0d6efd;color:#fff">
+          <th style="padding:7px 6px;text-align:right">الاسم</th>
+          <th style="padding:7px 6px;text-align:left">المبلغ</th>
+          <th style="padding:7px 6px;text-align:center">التاريخ</th>
+          <th style="padding:7px 6px;text-align:left">الرصيد</th>
+        </tr>
+      </thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+    <p style="text-align:center;margin-top:12px;font-size:14px;font-weight:bold;color:${netColor}">الصافي: ${netSign}${Math.abs(net).toLocaleString()} د.ع</p>
+  </div>`;
+
+  const div=document.createElement("div");
+  div.innerHTML=html;
+  div.style.cssText="position:absolute;left:-9999px;top:0;z-index:-1";
+  document.body.appendChild(div);
+
+  showProgress("📄 تصدير PDF","جاري إنشاء التقرير...");
+
+  html2canvas(div,{scale:2,useCORS:true,backgroundColor:"#fff"})
+    .then(canvas=>{
+      const imgData=canvas.toDataURL("image/png");
+      const imgWidth=190;
+      const imgHeight=(canvas.height*imgWidth)/canvas.width;
+      doc.addImage(imgData,"PNG",10,10,imgWidth,imgHeight);
+      document.body.removeChild(div);
+      hideProgress();
+      doc.save(fileName);
+      showToast("✅ تم تصدير PDF");
+    })
+    .catch(err=>{
+      document.body.removeChild(div);
+      hideProgress();
+      showToast("❌ فشل تصدير PDF");
+      console.error("html2canvas error:",err);
+    });
 }
 window.exportPDF=exportPDF;
 
